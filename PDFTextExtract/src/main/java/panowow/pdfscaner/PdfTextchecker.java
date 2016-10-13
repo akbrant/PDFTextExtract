@@ -74,7 +74,6 @@ public class PdfTextchecker extends Application {
  
         openButton.setOnAction(
             new EventHandler<ActionEvent>() {
-                @Override
                 public void handle(final ActionEvent e) {
                     File file = fileChooser.showOpenDialog(stage);
                     if (file != null) {
@@ -85,7 +84,6 @@ public class PdfTextchecker extends Application {
  
         openMultipleButton.setOnAction(
             new EventHandler<ActionEvent>() {
-                @Override
                 public void handle(final ActionEvent e) {
                     List<File> list =
                         fileChooser.showOpenMultipleDialog(stage);
