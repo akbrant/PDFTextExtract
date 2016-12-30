@@ -21,8 +21,10 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import javafx.application.Application;
@@ -51,6 +53,7 @@ public class PdfTextchecker extends Application {
 	ArrayList<String> aPDFNonOCR = new ArrayList<String>();
 	ArrayList<String> aPDFOCR = new ArrayList<String>();
 	ArrayList<String> aPDFPass = new ArrayList<String>();
+	ArrayList<String> htmlreports = new ArrayList<String>();
 	
 	@FXML private TextField Folderselected;
 	@FXML private TextArea pdftextTextArea;
@@ -131,7 +134,8 @@ public class PdfTextchecker extends Application {
     			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
     			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
     			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
-
+    			writeSmallTextFile(htmlreports, defaultfolder + filesep +"pdfaccessibility.csv");
+    			
     		} catch (IOException e) {
     			logger.debug(e);
     		}
@@ -164,25 +168,51 @@ public class PdfTextchecker extends Application {
 		/// Users/brant/git/PDFTextExtract/PDFTextExtract/docs/html
 		logger.debug("parsing html report file " + htmlfile.getName());
 		logger.debug("length" + htmlfile.getTotalSpace());
-
+		String filenamePath ="";
+		String filename="";
+		String pass="";
+		String failed="";
+		
 		try {
 			Document doc = Jsoup.parse(htmlfile, "UTF-8");
 
-			Elements dl = doc.select("dl");
-			Elements dts = dl.select("dt");
-			Elements dds = dl.select("dd");
+		    for(Element e : doc.getAllElements()){
+		        for(Node n: e.childNodes()){
+		            if(n instanceof Comment){
+		            	if(n.toString().contains("pdf-source")){
+		            		filenamePath = n.toString().split("\"")[1];
+		            		System.out.println(filenamePath);
+		            	}
+		                
+		            }
+		        }
+		    }
+			
+			Elements dlfile = doc.select("dd:contains(pdf)");
+			
+			for (Element dl2 : dlfile) {
+			    System.out.println(dl2.html());
+			    filename = dl2.html();
+			}	
+			
+			Elements lipass = doc.select("li:contains(Passed:)");
+			
+			for (Element li : lipass) {
+			    System.out.println(li.html());
+			    pass = li.html();
+			}	
 
-			Iterator<Element> dtsIterator = dts.iterator();
-			Iterator<Element> ddsIterator = dds.iterator();
-			while (dtsIterator.hasNext() && ddsIterator.hasNext()) {
-				Element dt = (Element) dtsIterator.next();
-				Element dd = (Element) ddsIterator.next();
-				System.out.println("\t\t" + dt.text() + "\t\t" + dd.text());
+			Elements lifailded = doc.select("li:contains(Failed:)");
+			
+			for (Element li : lifailded) {
+			    System.out.println(li.html());
+			    failed = li.html();
+			}	
+
+			if(filename.length() > 1) {
+				htmlreports.add(filenamePath + "," + filename + "," + pass + "," + failed);
 			}
-
-			Element e1 = doc.getElementById("reportTop");
-			// logger.debug(e1.getElementsMatchingText(""));
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
