@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,10 @@ import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.util.PDFTextStripper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -147,12 +152,42 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-    			parsePDFdoc(file);
+    			//parsePDFdoc(file);
+    			parseHtmlReport(file);
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
     		}
     	} 
     }
+    
+	void parseHtmlReport(File htmlfile) {
+		/// Users/brant/git/PDFTextExtract/PDFTextExtract/docs/html
+		logger.debug("parsing html report file " + htmlfile.getName());
+		logger.debug("length" + htmlfile.getTotalSpace());
+
+		try {
+			Document doc = Jsoup.parse(htmlfile, "UTF-8");
+
+			Elements dl = doc.select("dl");
+			Elements dts = dl.select("dt");
+			Elements dds = dl.select("dd");
+
+			Iterator<Element> dtsIterator = dts.iterator();
+			Iterator<Element> ddsIterator = dds.iterator();
+			while (dtsIterator.hasNext() && ddsIterator.hasNext()) {
+				Element dt = (Element) dtsIterator.next();
+				Element dd = (Element) ddsIterator.next();
+				System.out.println("\t\t" + dt.text() + "\t\t" + dd.text());
+			}
+
+			Element e1 = doc.getElementById("reportTop");
+			// logger.debug(e1.getElementsMatchingText(""));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
     void parsePDFdoc(File pdffile){
     	PDFParser parser = null;
