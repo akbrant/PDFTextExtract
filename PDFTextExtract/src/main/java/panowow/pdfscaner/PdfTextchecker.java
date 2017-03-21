@@ -239,10 +239,10 @@ public class PdfTextchecker extends Application {
     		info = pdDoc.getDocumentInformation();
     		logger.debug(info.getKeywords());
     		logger.debug(info.getTitle());
-    		logger.debug("Found a PDF doc. ");
+    		logger.debug("Found a PDF doc.  ");
     		String parsedText = pdfStripper.getText(pdDoc);
     		logger.debug("Done Parsing length: " + parsedText.length() +  " Num pages: " + pdDoc.getNumberOfPages());
-    		if(parsedText.length() !=  pdDoc.getNumberOfPages() ) {
+    		if(parsedText.trim().length() > 0) {
     			aPDFOCR.add(pdffile.getAbsolutePath() + ", Text Length: " + parsedText.length() + ", Pages: " +  pdDoc.getNumberOfPages());
     			if (extractCheckbox.isSelected()) {
     				String filesep = System.getProperty("file.separator");
