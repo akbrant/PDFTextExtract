@@ -122,6 +122,8 @@ public class PdfTextchecker extends Application {
     void PDFScanStart(ActionEvent event) {
 
     	logger.debug("start scanning....");
+    	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
+    	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
     	
     	if (defaultfolder != null) {
     		File[] files = new File(defaultfolder).listFiles();
@@ -156,8 +158,8 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-    			//parsePDFdoc(file);
-    			parseHtmlReport(file);
+    			parsePDFdoc(file);
+    			//parseHtmlReport(file);
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
     		}
@@ -241,14 +243,14 @@ public class PdfTextchecker extends Application {
     		String parsedText = pdfStripper.getText(pdDoc);
     		logger.debug("Done Parsing length: " + parsedText.length() +  " Num pages: " + pdDoc.getNumberOfPages());
     		if(parsedText.length() !=  pdDoc.getNumberOfPages() ) {
-    			aPDFOCR.add(pdffile.getAbsolutePath() + " Text Length: " + parsedText.length() + " Pages: " +  pdDoc.getNumberOfPages());
+    			aPDFOCR.add(pdffile.getAbsolutePath() + ", Text Length: " + parsedText.length() + ", Pages: " +  pdDoc.getNumberOfPages());
     			if (extractCheckbox.isSelected()) {
     				String filesep = System.getProperty("file.separator");
         			writeSmallTextFile(Arrays.asList(parsedText), defaultfolder + filesep +pdffile.getName()+".txt" );
     			}
     			
     		} else {
-    			aPDFNonOCR.add(pdffile.getAbsolutePath()+ " Text Length: " + parsedText.length() + " Pages: " +  pdDoc.getNumberOfPages());
+    			aPDFNonOCR.add(pdffile.getAbsolutePath()+ ", Text Length: " + parsedText.length() + ", Pages: " +  pdDoc.getNumberOfPages());
     		}
     		if (cosDoc != null)
 				cosDoc.close();
@@ -256,6 +258,7 @@ public class PdfTextchecker extends Application {
 				pdDoc.close();
     	} catch (IOException e) {
     		logger.error(e);
+    		logger.debug("Not a pdf or cant read it: " + pdffile.getAbsolutePath());
     		NotaPDF.add(pdffile.getAbsolutePath());
     	}
     }
