@@ -150,6 +150,10 @@ public class PdfTextchecker extends Application {
     {
 
     	StringBuffer strbuff = new StringBuffer();
+		htmlreports.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," +
+    	  "Summfailed" + "," + "Headings App Nesting" + "," + "Tagged annotations" +
+				"," + "Tagged form fields" + "headers" + "Hides annotation");
+			 
     	for (File file : files) {
     		if (file.isDirectory()) {
     			logger.debug("Directory: " + file.getName());
@@ -158,8 +162,8 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-    			parsePDFdoc(file);
-    			//parseHtmlReport(file);
+    			//parsePDFdoc(file);
+    			parseHtmlReport(file);
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
     		}
@@ -174,8 +178,15 @@ public class PdfTextchecker extends Application {
 		String filename="";
 		String pass="";
 		String failed="";
+		String appnest="";
+		String taggann="";
+		String taggform="";
+		String headers="";
+		String hideann="";
 		
 		try {
+			
+			
 			Document doc = Jsoup.parse(htmlfile, "UTF-8");
 
 		    for(Element e : doc.getAllElements()){
@@ -211,8 +222,50 @@ public class PdfTextchecker extends Application {
 			    failed = li.html();
 			}	
 
+			Elements trtaggform = doc.select("tr:contains(Tagged form fields)");
+			for (Element li : trtaggform) {				
+				Elements cols2status = li.select("td");
+			    System.out.println(cols2status.html());
+			    taggform = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+			}
+			
+			Elements tr = doc.select("tr:contains(Hides annotation)");
+			for (Element li : tr) {				
+				Elements cols2status = li.select("td");
+			    System.out.println(cols2status.html());
+			    hideann = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+			}
+			
+			
+			tr = doc.select("tr:contains(Headers)");
+			for (Element li : tr) {				
+				Elements cols2status = li.select("td");
+			    System.out.println(cols2status.html());
+			    headers = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+			}
+			
+			
+			
+			Elements trtaggann = doc.select("tr:contains(Tagged annotations)");
+			for (Element li : trtaggann) {				
+				Elements cols2status = li.select("td");
+			    System.out.println(cols2status.html());
+			    taggann = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+			}	
+			
+			
+			Elements trappnest = doc.select("tr:contains(Appropriate nesting)");
+			
+			for (Element li : trappnest) {				
+				Elements cols2status = li.select("td");
+			    System.out.println(cols2status.html());
+			    appnest = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+			}	
+			
 			if(filename.length() > 1) {
-				htmlreports.add(filenamePath + "," + filename + "," + pass + "," + failed);
+				htmlreports.add(filenamePath + "," + filename + "," 
+						+ pass + "," + failed + "," + appnest 
+						+ "," + taggann + "," + taggform + "," + headers + "," + hideann);
 			}
 			
 		} catch (IOException e) {
