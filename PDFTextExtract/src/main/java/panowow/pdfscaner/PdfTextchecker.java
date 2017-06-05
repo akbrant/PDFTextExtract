@@ -28,6 +28,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,6 +37,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -58,7 +60,8 @@ public class PdfTextchecker extends Application {
 	@FXML private TextField Folderselected;
 	@FXML private TextArea pdftextTextArea;
 	@FXML private CheckBox extractCheckbox;
-
+	@FXML private CheckBox pasrseHtmlCheckbox;
+	
 	
 	
     @Override
@@ -79,7 +82,8 @@ public class PdfTextchecker extends Application {
  
         final Button openButton = new Button("Open a Picture...");
         final Button openMultipleButton = new Button("Open Pictures...");
- 
+
+        
         openButton.setOnAction(
             new EventHandler<ActionEvent>() {
                 public void handle(final ActionEvent e) {
@@ -152,7 +156,7 @@ public class PdfTextchecker extends Application {
     	StringBuffer strbuff = new StringBuffer();
 		htmlreports.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," +
     	  "Summfailed" + "," + "Headings App Nesting" + "," + "Tagged annotations" +
-				"," + "Tagged form fields" + "headers" + "Hides annotation");
+				"," + "Tagged form fields" + "," +  "headers" + "," + "Hides annotation");
 			 
     	for (File file : files) {
     		if (file.isDirectory()) {
@@ -162,8 +166,13 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-    			//parsePDFdoc(file);
-    			parseHtmlReport(file);
+   
+    			if (pasrseHtmlCheckbox.isSelected()) {
+    				parseHtmlReport(file);
+    			} else {
+    				parsePDFdoc(file);
+    			}			
+    			
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
     		}
@@ -341,7 +350,6 @@ public class PdfTextchecker extends Application {
      
 	}
 
-    
     
     private static void writeSmallTextFile(List<String> aLines, String aFileName) throws IOException {
         Path path = Paths.get(aFileName);

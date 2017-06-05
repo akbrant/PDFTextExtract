@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="267.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
+<StackPane prefHeight="267.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
 <children>
 <StackPane>
 <children>
@@ -19,7 +24,8 @@
 <TextField fx:id="Folderselected" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Button fx:id="PdfFolderselectbtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openfoldercho" text="Select Folder" textAlignment="CENTER" GridPane.rowIndex="2" />
                         <Button fx:id="PDFScanStartbutt" mnemonicParsing="false" onAction="#PDFScanStart" text="Scan Folder" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="extractCheckbox" mnemonicParsing="false" text="Extract Text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="extractCheckbox" mnemonicParsing="false" text="Extract  PDF Text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="pasrseHtmlCheckbox" mnemonicParsing="false" text="Parse HTML Reports" GridPane.rowIndex="1" />
 </children>
 <columnConstraints>
 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
