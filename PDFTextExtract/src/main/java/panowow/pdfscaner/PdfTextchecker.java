@@ -154,10 +154,45 @@ public class PdfTextchecker extends Application {
     {
 
     	StringBuffer strbuff = new StringBuffer();
-		htmlreports.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," +
-    	  "Summfailed" + "," + "Headings App Nesting" + "," + "Tagged annotations" +
-				"," + "Tagged form fields" + "," +  "headers" + "," + "Hides annotation");
-			 
+		htmlreports.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed" 
+		  + ",Accessibility permission flag"
+    	  + ",Image-only PDF"
+    	  + ",Tagged PDF"
+    	  + ",Primary language"
+    	  + ",Title"
+    	  + ",Bookmarks"
+    	  
+    	  + ",Tagged content" 
+    	  + ",annotations" 
+    	  + ",Tab order" 
+    	  + ",Character encoding"
+    	  + ",Tagged multimedia"
+    	  + ",Screen flicker"
+    	  + ",Scripts"
+    	  + ",Timed responses"
+    	  
+    	  + ",Tagged form fields"
+    	  + ",Field descriptions"
+    	  
+    	  + ",Figures alternate text"
+    	  + ",Nested alternate text"
+    	  + ",Associated with content"
+    	  + ",Hides annotation"
+    	  + ",Other elements alternate text"
+    	  
+    	  + ",Rows"
+    	  + ",TH and TD"
+    	  + ",Headers"
+    	  + ",Regularity"
+    	  + ",Summary"
+    	  
+    	  + ",List items"
+    	  + ",Lbl and LBody"
+    	  + ",Appropriate nesting"
+				);
+	
+
+		
     	for (File file : files) {
     		if (file.isDirectory()) {
     			logger.debug("Directory: " + file.getName());
@@ -187,14 +222,8 @@ public class PdfTextchecker extends Application {
 		String filename="";
 		String pass="";
 		String failed="";
-		String appnest="";
-		String taggann="";
-		String taggform="";
-		String headers="";
-		String hideann="";
-		
-		try {
 			
+		try {
 			
 			Document doc = Jsoup.parse(htmlfile, "UTF-8");
 
@@ -231,50 +260,60 @@ public class PdfTextchecker extends Application {
 			    failed = li.html();
 			}	
 
-			Elements trtaggform = doc.select("tr:contains(Tagged form fields)");
-			for (Element li : trtaggform) {				
-				Elements cols2status = li.select("td");
-			    System.out.println(cols2status.html());
-			    taggform = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
-			}
+
+			/* Document Rules 6 of them with Failed or Passed*/			
+			String doc1 = this.checkstatus(doc, "Accessibility permission flag");
+			String doc2 = this.checkstatus(doc, "Image-only PDF");
+			String doc3 = this.checkstatus(doc, "Tagged PDF");
+			String doc4 = this.checkstatus(doc, "Primary language");
+			String doc5 = this.checkstatus(doc, "Title");
+			String doc6 = this.checkstatus(doc, "Bookmarks");
 			
-			Elements tr = doc.select("tr:contains(Hides annotation)");
-			for (Element li : tr) {				
-				Elements cols2status = li.select("td");
-			    System.out.println(cols2status.html());
-			    hideann = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
-			}
+			/* Page Rules 8 of them with Failed or Passed*/			
+			String page1 = this.checkstatus(doc, "Tagged content");
+			String page2 = this.checkstatus(doc, "Tagged annotations");
+			String page3 = this.checkstatus(doc, "Tab order");
+			String page4 = this.checkstatus(doc, "Character encoding");
+			String page5 = this.checkstatus(doc, "Tagged multimedia");
+			String page6 = this.checkstatus(doc, "Screen flicker");
+			String page7 = this.checkstatus(doc, "Scripts");
+			String page8 = this.checkstatus(doc, "Timed responses");
 			
+			/* Form Rules 2 of them */
+			String form1 = this.checkstatus(doc, "Tagged form fields");
+			String form2 = this.checkstatus(doc, "Field descriptions");
 			
-			tr = doc.select("tr:contains(Headers)");
-			for (Element li : tr) {				
-				Elements cols2status = li.select("td");
-			    System.out.println(cols2status.html());
-			    headers = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
-			}
+			/* Alt text 5 of them */
+			String alttext1 = this.checkstatus(doc, "Figures alternate text");
+			String alttext2 = this.checkstatus(doc, "Nested alternate text");
+			String alttext3 = this.checkstatus(doc, "Associated with content");
+			String alttext4 = this.checkstatus(doc, "Hides annotation");
+			String alttext5 = this.checkstatus(doc, "Other elements alternate text");
 			
+			/* Tabels 5 of them  */
+			String tables1 = this.checkstatus(doc, "Rows");
+			String tables2 = this.checkstatus(doc, "TH and TD");
+			String tables3 = this.checkstatus(doc, "Headers");
+			String tables4 = this.checkstatus(doc, "Regularity");
+			String tables5 = this.checkstatus(doc, "Summary");
 			
+			/* List 2 of them */
+			String list1 = this.checkstatus(doc, "List items");
+			String list2 = this.checkstatus(doc, "Lbl and LBody");
 			
-			Elements trtaggann = doc.select("tr:contains(Tagged annotations)");
-			for (Element li : trtaggann) {				
-				Elements cols2status = li.select("td");
-			    System.out.println(cols2status.html());
-			    taggann = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
-			}	
-			
-			
-			Elements trappnest = doc.select("tr:contains(Appropriate nesting)");
-			
-			for (Element li : trappnest) {				
-				Elements cols2status = li.select("td");
-			    System.out.println(cols2status.html());
-			    appnest = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
-			}	
+			/*  Headings 1 of them*/
+			String headings1 = this.checkstatus(doc, "Appropriate nesting");
 			
 			if(filename.length() > 1) {
 				htmlreports.add(filenamePath + "," + filename + "," 
-						+ pass + "," + failed + "," + appnest 
-						+ "," + taggann + "," + taggform + "," + headers + "," + hideann);
+						+ pass + "," + failed + ","  
+						+doc1+doc2+doc3+doc4+doc5+doc6 +
+						page1+page2+page3+page4+page5+page6+page7+page8+
+						form1 + form2+ 
+						alttext1+alttext2+alttext3+alttext4+alttext5+
+						tables1+tables2+tables3+tables4+tables5+
+						list1+list2+headings1
+						);
 			}
 			
 		} catch (IOException e) {
@@ -282,6 +321,19 @@ public class PdfTextchecker extends Application {
 		}
 
 	}
+	
+	private String checkstatus(Document doc, String findRule) {		
+		String searchstr = "tr:contains(" + findRule + ")";
+		Elements trappnest = doc.select(searchstr);
+		String statusStr = "";
+		for (Element li : trappnest) {				
+			Elements cols2status = li.select("td");
+		    System.out.println(cols2status.html());
+		    statusStr = (cols2status.html().contains("Failed")) ? "Failed" : "Pass";
+		}	
+		return statusStr + ",";		
+	}
+	
 
     void parsePDFdoc(File pdffile){
     	PDFParser parser = null;
