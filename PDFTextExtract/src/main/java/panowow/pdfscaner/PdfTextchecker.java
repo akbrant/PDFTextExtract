@@ -4,6 +4,7 @@ package panowow.pdfscaner;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +27,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfArray;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfString;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -61,6 +72,7 @@ public class PdfTextchecker extends Application {
 	@FXML private TextArea pdftextTextArea;
 	@FXML private CheckBox extractCheckbox;
 	@FXML private CheckBox pasrseHtmlCheckbox;
+	private PdfDictionary structTreeRoot;
 	
 	
 	
@@ -201,12 +213,19 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-   
-    			if (pasrseHtmlCheckbox.isSelected()) {
-    				parseHtmlReport(file);
-    			} else {
-    				parsePDFdoc(file);
-    			}			
+
+				if (pasrseHtmlCheckbox.isSelected()) {
+					try {
+						manipulatePdf(file.getAbsolutePath(), file.getAbsolutePath() + "fixed.pdf");
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (DocumentException e) {
+						e.printStackTrace();
+					}
+					// parseHtmlReport(file);
+				} else {
+					parsePDFdoc(file);
+				}
     			
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
@@ -334,6 +353,51 @@ public class PdfTextchecker extends Application {
 		return statusStr + ",";		
 	}
 	
+
+	public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
+		PdfReader reader = new PdfReader(src);
+		PdfDictionary catalog = reader.getCatalog();
+		structTreeRoot = catalog.getAsDict(PdfName.STRUCTTREEROOT);
+		manipulate(structTreeRoot);
+		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
+		stamper.close();
+	}
+
+	public void manipulate(PdfDictionary element) {
+		if (element == null)
+			return;
+		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
+			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
+			element.clear();
+		}
+		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
+			element.clear();
+		}
+		if (PdfName.TH.equals(element.get(PdfName.S))) {
+			element.clear();
+		}
+		if (PdfName.H2.equals(element.get(PdfName.S))) {
+			element.clear();
+		}
+		if (PdfName.H3.equals(element.get(PdfName.S))) {
+			element.clear();
+		}		
+		if (PdfName.H4.equals(element.get(PdfName.S))) {
+			element.clear();
+		}
+		
+
+		
+		
+		
+		PdfArray kids = element.getAsArray(PdfName.K);
+		if (kids == null)
+			return;
+		for (int i = 0; i < kids.size(); i++)
+			manipulate(kids.getAsDict(i));
+	}
+	
+
 
     void parsePDFdoc(File pdffile){
     	PDFParser parser = null;
