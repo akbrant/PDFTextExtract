@@ -366,8 +366,11 @@ public class PdfTextchecker extends Application {
 	public void manipulate(PdfDictionary element) {
 		if (element == null)
 			return;
+		
+		/*Tables */
 		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
 			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
+			logger.debug("Table Found and removed");
 			element.clear();
 		}
 		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
@@ -376,15 +379,32 @@ public class PdfTextchecker extends Application {
 		if (PdfName.TH.equals(element.get(PdfName.S))) {
 			element.clear();
 		}
+		
+		/*Headers*/
 		if (PdfName.H2.equals(element.get(PdfName.S))) {
 			element.clear();
+			logger.debug("Header H2 Found and removed");
 		}
 		if (PdfName.H3.equals(element.get(PdfName.S))) {
 			element.clear();
+			logger.debug("Header H3 Found and removed");
 		}		
 		if (PdfName.H4.equals(element.get(PdfName.S))) {
 			element.clear();
+			logger.debug("Header H4 Found and removed");
+		}	
+		
+		/*Lists*/
+		if (PdfName.L.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("List L Found and removed");
 		}
+		if (PdfName.LI.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("List LI Found and removed");
+		}
+
+		
 		
 
 		
