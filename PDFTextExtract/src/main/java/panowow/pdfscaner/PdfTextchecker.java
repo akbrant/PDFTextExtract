@@ -72,6 +72,7 @@ public class PdfTextchecker extends Application {
 	@FXML private TextArea pdftextTextArea;
 	@FXML private CheckBox extractCheckbox;
 	@FXML private CheckBox pasrseHtmlCheckbox;
+	@FXML private CheckBox removeUATaggsCheckbox;
 	private PdfDictionary structTreeRoot;
 	
 	
@@ -149,10 +150,14 @@ public class PdfTextchecker extends Application {
     			logger.debug(System.getProperties());
     			logger.debug(System.getProperty("file.separator"));
     			String filesep = System.getProperty("file.separator");
-    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
-    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
-    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
-    			writeSmallTextFile(htmlreports, defaultfolder + filesep +"pdfaccessibility.csv");
+    			if (extractCheckbox.isSelected()) {
+	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
+	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
+	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
+    			}
+    			if (pasrseHtmlCheckbox.isSelected()) {
+	    			writeSmallTextFile(htmlreports, defaultfolder + filesep +"pdfaccessibility.csv");
+    			}
     			
     		} catch (IOException e) {
     			logger.debug(e);
@@ -202,8 +207,6 @@ public class PdfTextchecker extends Application {
     	  + ",Lbl and LBody"
     	  + ",Appropriate nesting"
 				);
-	
-
 		
     	for (File file : files) {
     		if (file.isDirectory()) {
@@ -214,21 +217,23 @@ public class PdfTextchecker extends Application {
     		} else {
     			logger.debug("File: " + file.getName());
 
-				if (pasrseHtmlCheckbox.isSelected()) {
-					try {
-						File dir = new File(file.getParent() + "/removedtags" );
-						dir.mkdirs();
-						manipulatePdf(file.getAbsolutePath(),  dir.getAbsolutePath() +"/" + file.getName());
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (DocumentException e) {
-						e.printStackTrace();
-					}
-					// parseHtmlReport(file);
-				} else {
-					parsePDFdoc(file);
-				}
-    			
+    			if (removeUATaggsCheckbox.isSelected()) {
+    				try {
+    					File dir = new File(file.getParent() + "/removedtags" );
+    					dir.mkdirs();
+    					manipulatePdf(file.getAbsolutePath(),  dir.getAbsolutePath() +"/" + file.getName());
+    				} catch (IOException e) {
+    					e.printStackTrace();
+    				} catch (DocumentException e) {
+    					e.printStackTrace();
+    				}
+    			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
+    				parseHtmlReport(file);
+    			} else if (extractCheckbox.isSelected()){
+    				parsePDFdoc(file);
+    			}
+
+				
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
     		}
@@ -412,7 +417,7 @@ public class PdfTextchecker extends Application {
 		
 		
 		
-		PdfArray kids = element.getAsArray(PdfName.K);
+		PdfArray kids = element.getAsArray(PdfName.KIDS);
 		if (kids == null)
 			return;
 		for (int i = 0; i < kids.size(); i++)
