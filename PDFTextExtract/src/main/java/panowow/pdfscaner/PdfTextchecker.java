@@ -216,7 +216,9 @@ public class PdfTextchecker extends Application {
 
 				if (pasrseHtmlCheckbox.isSelected()) {
 					try {
-						manipulatePdf(file.getAbsolutePath(), file.getAbsolutePath() + "fixed.pdf");
+						File dir = new File(file.getParent() + "/removedtags" );
+						dir.mkdirs();
+						manipulatePdf(file.getAbsolutePath(),  dir.getAbsolutePath() +"/" + file.getName());
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (DocumentException e) {
