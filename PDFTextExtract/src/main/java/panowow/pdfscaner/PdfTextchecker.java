@@ -33,10 +33,12 @@ import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfDictionary;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfString;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.parser.TaggedPdfReaderTool;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -74,6 +76,7 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox pasrseHtmlCheckbox;
 	@FXML private CheckBox removeUATaggsCheckbox;
 	private PdfDictionary structTreeRoot;
+	private TaggedPdfParser tagtool;
 	
 	
 	
@@ -144,6 +147,7 @@ public class PdfTextchecker extends Application {
     	
     	if (defaultfolder != null) {
     		File[] files = new File(defaultfolder).listFiles();
+    		tagtool = new TaggedPdfParser();
     		showFiles(files);
 
     		try {
@@ -222,11 +226,12 @@ public class PdfTextchecker extends Application {
     					File dir = new File(file.getParent() + "/removedtags" );
     					dir.mkdirs();
     					manipulatePdf(file.getAbsolutePath(),  dir.getAbsolutePath() +"/" + file.getName());
+    					
     				} catch (IOException e) {
     					e.printStackTrace();
     				} catch (DocumentException e) {
-    					e.printStackTrace();
-    				}
+						e.printStackTrace();
+					}
     			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
     				parseHtmlReport(file);
     			} else if (extractCheckbox.isSelected()){
@@ -239,6 +244,17 @@ public class PdfTextchecker extends Application {
     		}
     	} 
     }
+
+    
+	public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
+		PdfReader reader = new PdfReader(src);
+		tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")));		
+		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
+		stamper.close();
+	}
+
+
+    
     
 	void parseHtmlReport(File htmlfile) {
 		/// Users/brant/git/PDFTextExtract/PDFTextExtract/docs/html
@@ -361,69 +377,6 @@ public class PdfTextchecker extends Application {
 	}
 	
 
-	public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
-		PdfReader reader = new PdfReader(src);
-		PdfDictionary catalog = reader.getCatalog();
-		structTreeRoot = catalog.getAsDict(PdfName.STRUCTTREEROOT);
-		manipulate(structTreeRoot);
-		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
-		stamper.close();
-	}
-
-	public void manipulate(PdfDictionary element) {
-		if (element == null)
-			return;
-		
-		/*Tables */
-		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
-			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
-			logger.debug("Table Found and removed");
-			element.clear();
-		}
-		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
-			element.clear();
-		}
-		if (PdfName.TH.equals(element.get(PdfName.S))) {
-			element.clear();
-		}
-		
-		/*Headers*/
-		if (PdfName.H2.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("Header H2 Found and removed");
-		}
-		if (PdfName.H3.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("Header H3 Found and removed");
-		}		
-		if (PdfName.H4.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("Header H4 Found and removed");
-		}	
-		
-		/*Lists*/
-		if (PdfName.L.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("List L Found and removed");
-		}
-		if (PdfName.LI.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("List LI Found and removed");
-		}
-
-		
-		
-
-		
-		
-		
-		PdfArray kids = element.getAsArray(PdfName.KIDS);
-		if (kids == null)
-			return;
-		for (int i = 0; i < kids.size(); i++)
-			manipulate(kids.getAsDict(i));
-	}
-	
 
 
     void parsePDFdoc(File pdffile){
