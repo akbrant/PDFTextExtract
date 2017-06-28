@@ -292,6 +292,11 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("Header H4 Found and removed");
 		}	
+		if (PdfName.H5.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Header H5 Found and removed");
+		}	
+		
 		
 		/*Lists*/
 		if (PdfName.L.equals(element.get(PdfName.S))) {
