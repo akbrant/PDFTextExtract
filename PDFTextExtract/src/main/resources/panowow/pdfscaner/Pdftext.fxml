@@ -23,10 +23,12 @@
 <Label text="Folder Selected:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 <TextField fx:id="Folderselected" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="PdfFolderselectbtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openfoldercho" text="Select Folder" textAlignment="CENTER" />
-                        <Button fx:id="PDFScanStartbutt" mnemonicParsing="false" onAction="#PDFScanStart" text="Scan Folder" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <CheckBox fx:id="extractCheckbox" mnemonicParsing="false" text="Extract  PDF Text" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="PDFScanStartbutt" mnemonicParsing="false" onAction="#PDFScanStart" text="Scan Folder" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <CheckBox fx:id="extractCheckbox" mnemonicParsing="false" text="Scan ORC &amp;Extract  PDF Text" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <CheckBox fx:id="pasrseHtmlCheckbox" mnemonicParsing="false" text="Parse HTML Reports" GridPane.rowIndex="2" />
                         <CheckBox fx:id="removeUATaggsCheckbox" mnemonicParsing="false" text="Remove UA Taggs" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="scanORCCheckbox" mnemonicParsing="false" text="Scan ORC Only" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="pdfMetaCheckBox" mnemonicParsing="false" text="PDF MetaCSV" GridPane.rowIndex="4" />
 </children>
 <columnConstraints>
 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
@@ -36,6 +38,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 </rowConstraints>

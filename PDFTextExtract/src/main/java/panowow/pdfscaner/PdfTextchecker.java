@@ -39,6 +39,7 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfString;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.parser.TaggedPdfReaderTool;
+import com.sun.xml.internal.ws.api.addressing.WSEndpointReference.Metadata;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -75,6 +76,10 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox extractCheckbox;
 	@FXML private CheckBox pasrseHtmlCheckbox;
 	@FXML private CheckBox removeUATaggsCheckbox;
+	@FXML private CheckBox pdfMetaCheckBox;
+	@FXML private CheckBox scanORCCheckbox;
+	
+	
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
 	
@@ -154,7 +159,7 @@ public class PdfTextchecker extends Application {
     			logger.debug(System.getProperties());
     			logger.debug(System.getProperty("file.separator"));
     			String filesep = System.getProperty("file.separator");
-    			if (extractCheckbox.isSelected()) {
+    			if (scanORCCheckbox.isSelected()) {
 	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
 	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
 	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
@@ -162,7 +167,6 @@ public class PdfTextchecker extends Application {
     			if (pasrseHtmlCheckbox.isSelected()) {
 	    			writeSmallTextFile(htmlreports, defaultfolder + filesep +"pdfaccessibility.csv");
     			}
-    			
     		} catch (IOException e) {
     			logger.debug(e);
     		}
@@ -236,6 +240,8 @@ public class PdfTextchecker extends Application {
     				parseHtmlReport(file);
     			} else if (extractCheckbox.isSelected()){
     				parsePDFdoc(file);
+    			} else if (pdfMetaCheckBox.isSelected()) {
+	    			this.getPDFmetaData(file);
     			}
 
 				
@@ -377,6 +383,22 @@ public class PdfTextchecker extends Application {
 	}
 	
 
+	void getPDFmetaData(File pdffile) {
+    	
+    	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());
+    	TagMetaData meatadata;
+    	
+    	try {
+    		PDDocument doc = PDDocument.load(pdffile);
+    		meatadata = new TagMetaData(doc);
+    		logger.debug(meatadata.toString());
+    		doc.close();
+    	} catch (IOException e) {
+    		logger.error(e);
+    		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
+    	}
+    	
+	}
 
 
     void parsePDFdoc(File pdffile){
