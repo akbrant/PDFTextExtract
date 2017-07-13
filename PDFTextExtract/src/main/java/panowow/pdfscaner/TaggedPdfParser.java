@@ -311,7 +311,7 @@ public class TaggedPdfParser {
 		/*Figures*/
 		if (PdfName.FIGURE.equals(element.get(PdfName.S))) {
 			element.clear();
-			logger.debug("List LI Found and removed");
+			logger.debug("Figure Found and removed");
 		}
 
 		
