@@ -29,7 +29,7 @@ public class TagMetaData {
 		newMetadata = doc.getDocumentInformation();
 	}
 
-	public String toStringHeadersCSV() {
+	public static String toStringHeadersCSV() {
 		StringBuffer outs = new StringBuffer();
 		outs.append("Page Count," );
 		outs.append( "Title,");
@@ -48,20 +48,20 @@ public class TagMetaData {
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
 		outs.append(pdoc.getNumberOfPages() );
-		outs.append( "," + newMetadata.getTitle() );
-		outs.append( "," + newMetadata.getAuthor() );
-		outs.append( "," + newMetadata.getSubject() );
-		outs.append( "," + newMetadata.getKeywords() );
-		outs.append( "," + newMetadata.getCreator() );
-		outs.append( "," + newMetadata.getProducer() );
+		outs.append( "," + String.valueOf(newMetadata.getTitle()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getAuthor()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getSubject()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getKeywords()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getCreator()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getProducer()).replace(",", ""));
 		try {
-			outs.append( "," + newMetadata.getCreationDate() );
-			outs.append( "," + newMetadata.getModificationDate());
+			outs.append( "," + String.valueOf(sdf.format(newMetadata.getCreationDate().getTime())).replace(",", ""));
+			outs.append( "," + String.valueOf(sdf.format(newMetadata.getModificationDate().getTime())).replace(",", ""));
 		} catch (IOException e) {
 			outs.append( ",,");
 			e.printStackTrace();
 		}
-		outs.append( "," + newMetadata.getTrapped() );
+		outs.append( "," + String.valueOf(newMetadata.getTrapped()).replace(",", ""));
 		return outs.toString();   
 	}
 	

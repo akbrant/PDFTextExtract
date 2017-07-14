@@ -69,7 +69,8 @@ public class PdfTextchecker extends Application {
 	ArrayList<String> aPDFNonOCR = new ArrayList<String>();
 	ArrayList<String> aPDFOCR = new ArrayList<String>();
 	ArrayList<String> aPDFPass = new ArrayList<String>();
-	ArrayList<String> htmlreports = new ArrayList<String>();
+	ArrayList<String> htmlreportsCSV = new ArrayList<String>();
+	ArrayList<String> pdfMetaDataCSV = new ArrayList<String>();
 	
 	@FXML private TextField Folderselected;
 	@FXML private TextArea pdftextTextArea;
@@ -165,7 +166,10 @@ public class PdfTextchecker extends Application {
 	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
     			}
     			if (pasrseHtmlCheckbox.isSelected()) {
-	    			writeSmallTextFile(htmlreports, defaultfolder + filesep +"pdfaccessibility.csv");
+	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
+    			}
+    			if (pdfMetaCheckBox.isSelected()) {
+	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
     			}
     		} catch (IOException e) {
     			logger.debug(e);
@@ -179,7 +183,7 @@ public class PdfTextchecker extends Application {
     {
 
     	StringBuffer strbuff = new StringBuffer();
-		htmlreports.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed" 
+		htmlreportsCSV.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed" 
 		  + ",Accessibility permission flag"
     	  + ",Image-only PDF"
     	  + ",Tagged PDF"
@@ -215,6 +219,8 @@ public class PdfTextchecker extends Application {
     	  + ",Lbl and LBody"
     	  + ",Appropriate nesting"
 				);
+		
+		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
 		
     	for (File file : files) {
     		if (file.isDirectory()) {
@@ -353,7 +359,7 @@ public class PdfTextchecker extends Application {
 			String headings1 = this.checkstatus(doc, "Appropriate nesting");
 			
 			if(filename.length() > 1) {
-				htmlreports.add(filenamePath + "," + filename + "," 
+				htmlreportsCSV.add(filenamePath + "," + filename + "," 
 						+ pass + "," + failed + ","  
 						+doc1+doc2+doc3+doc4+doc5+doc6 +
 						page1+page2+page3+page4+page5+page6+page7+page8+
@@ -392,6 +398,7 @@ public class PdfTextchecker extends Application {
     		PDDocument doc = PDDocument.load(pdffile);
     		meatadata = new TagMetaData(doc);
     		logger.debug(meatadata.toString());
+    		pdfMetaDataCSV.add(meatadata.toStringDataCSV());
     		doc.close();
     	} catch (IOException e) {
     		logger.error(e);
