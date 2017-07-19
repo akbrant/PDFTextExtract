@@ -164,12 +164,17 @@ public class PdfTextchecker extends Application {
 	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
 	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
 	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
+	    			NotaPDF.clear();
+	    			aPDFNonOCR.clear();
+	    			aPDFOCR.clear();
     			}
     			if (pasrseHtmlCheckbox.isSelected()) {
 	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
+	    			htmlreportsCSV.clear();
     			}
     			if (pdfMetaCheckBox.isSelected()) {
 	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
+	    			pdfMetaDataCSV.clear();
     			}
     		} catch (IOException e) {
     			logger.debug(e);

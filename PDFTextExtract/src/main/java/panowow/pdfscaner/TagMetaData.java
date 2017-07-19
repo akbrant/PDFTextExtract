@@ -48,20 +48,20 @@ public class TagMetaData {
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
 		outs.append(pdoc.getNumberOfPages() );
-		outs.append( "," + String.valueOf(newMetadata.getTitle()).replace(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getAuthor()).replace(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getSubject()).replace(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getKeywords()).replace(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getCreator()).replace(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getProducer()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getTitle()).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getAuthor()).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getSubject()).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getKeywords()).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getCreator()).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(newMetadata.getProducer()).replaceAll("[,;]", ""));
 		try {
-			outs.append( "," + String.valueOf(sdf.format(newMetadata.getCreationDate().getTime())).replace(",", ""));
-			outs.append( "," + String.valueOf(sdf.format(newMetadata.getModificationDate().getTime())).replace(",", ""));
+			outs.append( "," + String.valueOf(sdf.format(newMetadata.getCreationDate().getTime())).replaceAll(",", ""));
+			outs.append( "," + String.valueOf(sdf.format(newMetadata.getModificationDate().getTime())).replaceAll(",", ""));
 		} catch (IOException e) {
 			outs.append( ",,");
 			e.printStackTrace();
 		}
-		outs.append( "," + String.valueOf(newMetadata.getTrapped()).replace(",", ""));
+		outs.append( "," + String.valueOf(newMetadata.getTrapped()).replaceAll(",", ""));
 		return outs.toString();   
 	}
 	
