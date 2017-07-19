@@ -176,42 +176,16 @@ public class PdfTextchecker extends Application {
     {
 
     	StringBuffer strbuff = new StringBuffer();
-		htmlreportsCSV.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed" 
-		  + ",Accessibility permission flag"
-    	  + ",Image-only PDF"
-    	  + ",Tagged PDF"
-    	  + ",Primary language"
-    	  + ",Title"
-    	  + ",Bookmarks"
-    	  
-    	  + ",Tagged content" 
-    	  + ",annotations" 
-    	  + ",Tab order" 
-    	  + ",Character encoding"
-    	  + ",Tagged multimedia"
-    	  + ",Screen flicker"
-    	  + ",Scripts"
-    	  + ",Timed responses"
-    	  
-    	  + ",Tagged form fields"
-    	  + ",Field descriptions"
-    	  
-    	  + ",Figures alternate text"
-    	  + ",Nested alternate text"
-    	  + ",Associated with content"
-    	  + ",Hides annotation"
-    	  + ",Other elements alternate text"
-    	  
-    	  + ",Rows"
-    	  + ",TH and TD"
-    	  + ",Headers"
-    	  + ",Regularity"
-    	  + ",Summary"
-    	  
-    	  + ",List items"
-    	  + ",Lbl and LBody"
-    	  + ",Appropriate nesting"
-				);
+		htmlreportsCSV.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed"
+				+ ",Accessibility permission flag" + ",Image-only PDF" + ",Tagged PDF" + ",Primary language" + ",Title"
+				+ ",Bookmarks"
+				+ ",Tagged content" + ",annotations" + ",Tab order" + ",Character encoding" + ",Tagged multimedia"
+				+ ",Screen flicker" + ",Scripts" + ",Timed responses"
+				+ ",Tagged form fields" + ",Field descriptions"
+				+ ",Figures alternate text" + ",Nested alternate text" + ",Associated with content"
+				+ ",Hides annotation" + ",Other elements alternate text"
+				+ ",Rows" + ",TH and TD" + ",Headers" + ",Regularity" + ",Summary"
+				+ ",List items" + ",Lbl and LBody" + ",Appropriate nesting");
 		
 		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
 		
@@ -225,16 +199,7 @@ public class PdfTextchecker extends Application {
     			logger.debug("File: " + file.getName());
 
     			if (removeUATaggsCheckbox.isSelected()) {
-    				try {
-    					File dir = new File(file.getParent() + "/removedtags" );
-    					dir.mkdirs();
-    					manipulatePdf(file.getAbsolutePath(),  dir.getAbsolutePath() +"/" + file.getName());
-    					
-    				} catch (IOException e) {
-    					e.printStackTrace();
-    				} catch (DocumentException e) {
-						e.printStackTrace();
-					}
+    				removeUAtaggs(file);
     			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
     				parseHtmlReport(file);
     			} else if (extractCheckbox.isSelected()){
@@ -242,7 +207,6 @@ public class PdfTextchecker extends Application {
     			} else if (pdfMetaCheckBox.isSelected()) {
 	    			this.getPDFmetaData(file);
     			}
-
 				
     			strbuff.append(file.getName() + "\n");
     			pdftextTextArea.setText(strbuff.toString());
@@ -250,22 +214,44 @@ public class PdfTextchecker extends Application {
     	} 
     }
 
+    void removeUAtaggs(File file) {
+    	try {
+			File dir = new File(file.getParent() + "/removedtags" );
+			dir.mkdirs();
+	    	logger.debug("Going to remove tags from: " + file.getName());
+			PdfReader reader = new PdfReader(file.getAbsolutePath());
+			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
+			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));
+			stamper.close();
+			
+		} catch (IOException e) {
+    		logger.error(e);
+    		logger.debug("cant read file or metadata: " + file.getAbsolutePath());   
+		} catch (DocumentException e) {
+    		logger.error(e);
+    		logger.debug("cant read file or metadata: " + file.getAbsolutePath());   
+		}    	
+    }
     
-	void getPDFmetaData(File pdffile) {
-    	
+	void getPDFmetaData(File pdffile) {    	
     	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());
-    	TagMetaData meatadata;
-    	
+    	TagMetaData meatadata = null;
     	try {
     		//use itext to get metatdata
+    		File dir = new File(pdffile.getParent() + "/xmltxtfiles" );
+			dir.mkdirs();
     		PdfReader reader = new PdfReader(pdffile.getAbsolutePath());
     		meatadata = new TagMetaData(reader);
     		meatadata.setFilename(pdffile.getName());
+    		meatadata.setFilepath(pdffile.getAbsolutePath());
     		logger.debug(meatadata.toString());    		
-			tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")), meatadata);
+			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + pdffile.getName() + ".xml")), meatadata);
 			//add the println to cheep csv writer strings.
 			pdfMetaDataCSV.add(meatadata.toStringDataCSV());
     	} catch (IOException e) {
+    		if (meatadata != null ) {  //hate to do this, but we want to recored pdf meta data in csv even if pdf is not tagged. 
+    	 		pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+    		}
     		logger.error(e);
     		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
     	}
@@ -273,15 +259,6 @@ public class PdfTextchecker extends Application {
 	}
 
     
-	public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
-		PdfReader reader = new PdfReader(src);
-		tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")));	
-		//record the metadata to CSV sheet here
-		
-		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
-		stamper.close();
-	}
-
 
     
     

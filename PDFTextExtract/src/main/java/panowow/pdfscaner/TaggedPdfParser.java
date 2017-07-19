@@ -76,6 +76,8 @@ public class TaggedPdfParser {
 	protected PrintWriter out;
 	/** The  MeataData object to which the tag counts will be recorded */
 	protected TagMetaData meatadata;
+	/**Flag to remove UA tags while parsing or just report on UA tags */
+	private boolean ripouttags = false;
 	
 	private static Logger logger = Logger.getLogger(TaggedPdfParser.class.getName());
 
@@ -107,8 +109,8 @@ public class TaggedPdfParser {
 	}
 
 	/**
-	 * Parses a string with structured content. The output is done using the
-    * current charset.
+	 * Parses a string with structured content. The output is done using the current
+	 * charset.
 	 *
 	 * @param reader
 	 *            the PdfReader that has access to the PDF file
@@ -116,17 +118,17 @@ public class TaggedPdfParser {
 	 *            the OutputStream to which the resulting xml will be written
 	 */
 	public void convertToXml(PdfReader reader, FileOutputStream os) throws IOException {
+		// no tagmetadata is pass, go for it and remove ua tags
+		this.ripouttags = true;
 		convertToXml(reader, os, "UTF-8");
 	}
 
-	public void convertToXml(PdfReader reader, FileOutputStream os, TagMetaData md)
-			throws IOException {
-		//TODO fill out the tagMetaData object and write to csv
-	   meatadata = md;
-       convertToXml(reader, os, "UTF-8");
-   }
-
-	
+	public void convertToXml(PdfReader reader, FileOutputStream os, TagMetaData md) throws IOException {
+		// tagmetadata is passed so don't rip UA tags
+		this.ripouttags = false;
+		meatadata = md;
+		convertToXml(reader, os, "UTF-8");
+	}
 	
    /**
 	 * Inspects a child of a structured element. This can be an array or a
@@ -184,8 +186,13 @@ public class TaggedPdfParser {
            return;
        PdfName s = k.getAsName(PdfName.S);
        
-       //manipulate(k);
-       recordStructure(k);
+       
+       if (ripouttags) {
+    	   manipulate(k);  
+       } else {
+    	   recordStructure(k);   
+       }
+       
        
        if (s != null) {
            String tagN = PdfName.decodeName(s.toString());

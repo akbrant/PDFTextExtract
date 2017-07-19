@@ -1,12 +1,6 @@
 package panowow.pdfscaner;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-
-import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfReader;
 
 
@@ -34,7 +28,7 @@ public class TagMetaData {
 	private int numfigures = 0;
 	
 	private String filename ="";
-	
+	private String filepath ="";	
 	
 	public TagMetaData(PdfReader pdoc) {
 		super();
@@ -49,6 +43,7 @@ public class TagMetaData {
 	public static String toStringHeadersCSV() {
 		StringBuffer outs = new StringBuffer();
 		outs.append( "FileName,");
+		outs.append( "FilePath,");		
 		outs.append( "Page Count," );
 		outs.append( "Title,");
 		outs.append( "Author,");
@@ -75,15 +70,16 @@ public class TagMetaData {
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
 		outs.append(this.getFilename());
+		outs.append( "," + this.getFilepath());
 		outs.append( "," + preader.getNumberOfPages());
-		outs.append( "," + String.valueOf(preader.getInfo().get("Title")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Author")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Subject")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll(",", ""));	
-		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Title")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Author")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Subject")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll("[,;]", ""));	
+		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll("[,;]", ""));
 		outs.append( "," + this.getNumtable());
 		outs.append( "," + this.getNumtablerow());
 		outs.append( "," + this.getNumtableTH());
@@ -105,6 +101,14 @@ public class TagMetaData {
 	
 	public String getFilename() {
 		return filename;
+	}	
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
 	}
 
 	public void setFilename(String filename) {
