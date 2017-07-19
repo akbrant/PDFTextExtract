@@ -260,6 +260,7 @@ public class PdfTextchecker extends Application {
     		//use itext to get metatdata
     		PdfReader reader = new PdfReader(pdffile.getAbsolutePath());
     		meatadata = new TagMetaData(reader);
+    		meatadata.setFilename(pdffile.getName());
     		logger.debug(meatadata.toString());    		
 			tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")), meatadata);
 			//add the println to cheep csv writer strings.

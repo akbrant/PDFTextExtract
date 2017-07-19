@@ -345,27 +345,35 @@ public class TaggedPdfParser {
  		}
  		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
+ 			logger.debug("Table row found");
+ 			this.meatadata.setNumtablerowP1();
  		}
  		if (PdfName.TH.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
+ 			logger.debug("Table header found");
+ 			this.meatadata.setNumtableTHP1();
  		}
  		
  		/*Headers*/
  		if (PdfName.H2.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("Header H2 Found and noted.");
+ 			this.meatadata.setNumH2P1();
  		}
  		if (PdfName.H3.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("Header H3 Found and noted.");
+ 			this.meatadata.setNumH3P1();
  		}		
  		if (PdfName.H4.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("Header H4 Found and noted.");
+ 			this.meatadata.setNumH4P1();
  		}	
  		if (PdfName.H5.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("Header H5 Found and noted.");
+ 			this.meatadata.setNumH5P1();
  		}	
  		
  		
@@ -373,10 +381,12 @@ public class TaggedPdfParser {
  		if (PdfName.L.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("List L Found and noted.");
+ 			this.meatadata.setNumLP1();
  		}
  		if (PdfName.LI.equals(element.get(PdfName.S))) {
  			//write plus one to TagCounts
  			logger.debug("List LI Found and noted.");
+ 			this.meatadata.setNumLIP1();
  		}
 
  		/*Figures*/
