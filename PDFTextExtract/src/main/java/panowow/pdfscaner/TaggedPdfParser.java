@@ -54,6 +54,7 @@ import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
 import com.itextpdf.text.pdf.parser.TextExtractionStrategy;
 import com.itextpdf.text.xml.XMLUtil;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -73,6 +74,8 @@ public class TaggedPdfParser {
 	protected PdfReader reader;
 	/** The writer object to which the XML will be written */
 	protected PrintWriter out;
+	/** The  MeataData object to which the tag counts will be recorded */
+	protected TagMetaData meatadata;
 	
 	private static Logger logger = Logger.getLogger(TaggedPdfParser.class.getName());
 
@@ -112,11 +115,19 @@ public class TaggedPdfParser {
 	 * @param os
 	 *            the OutputStream to which the resulting xml will be written
 	 */
-	public void convertToXml(PdfReader reader, OutputStream os)
+	public void convertToXml(PdfReader reader, FileOutputStream os) throws IOException {
+		convertToXml(reader, os, "UTF-8");
+	}
+
+	public void convertToXml(PdfReader reader, FileOutputStream os, TagMetaData md)
 			throws IOException {
+		//TODO fill out the tagMetaData object and write to csv
+	   meatadata = md;
        convertToXml(reader, os, "UTF-8");
    }
 
+	
+	
    /**
 	 * Inspects a child of a structured element. This can be an array or a
 	 * dictionary.
@@ -173,7 +184,8 @@ public class TaggedPdfParser {
            return;
        PdfName s = k.getAsName(PdfName.S);
        
-       manipulate(k);
+       //manipulate(k);
+       recordStructure(k);
        
        if (s != null) {
            String tagN = PdfName.decodeName(s.toString());
@@ -320,6 +332,64 @@ public class TaggedPdfParser {
 	}
 	
 
+   public void recordStructure(PdfDictionary element) {
+ 		if (element == null)
+ 			return;
+ 		
+ 		/*Tables */
+ 		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
+ 			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
+ 			logger.debug("Table Found and noted.");
+ 			//write plus one to TagCounts
+ 			this.meatadata.setNumtableP1();
+ 		}
+ 		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 		}
+ 		if (PdfName.TH.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 		}
+ 		
+ 		/*Headers*/
+ 		if (PdfName.H2.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("Header H2 Found and noted.");
+ 		}
+ 		if (PdfName.H3.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("Header H3 Found and noted.");
+ 		}		
+ 		if (PdfName.H4.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("Header H4 Found and noted.");
+ 		}	
+ 		if (PdfName.H5.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("Header H5 Found and noted.");
+ 		}	
+ 		
+ 		
+ 		/*Lists*/
+ 		if (PdfName.L.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("List L Found and noted.");
+ 		}
+ 		if (PdfName.LI.equals(element.get(PdfName.S))) {
+ 			//write plus one to TagCounts
+ 			logger.debug("List LI Found and noted.");
+ 		}
+
+ 		/*Figures*/
+ 		if (PdfName.FIGURE.equals(element.get(PdfName.S))) {
+ 			this.meatadata.setNumfiguresP1();
+ 			//write plus one to TagCounts
+ 			logger.debug("Figure Found and noted.");
+ 		}
+	
+ 	}
+ 	
+   
+   
 	/**
 	 * Searches for a tag in a page.
 	 * 
@@ -365,5 +435,9 @@ public class TaggedPdfParser {
 					.getAsDict(PdfName.PG));
 		}
 	}
+
+
+
+
 
 }

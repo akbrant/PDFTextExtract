@@ -6,27 +6,28 @@ import java.text.SimpleDateFormat;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfReader;
+
 
 public class TagMetaData {
 
-	private PDDocumentInformation newMetadata;
-	private PDDocument pdoc;
+
+	private PdfReader preader;
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 	
+	private int numtable = 0;
+	private int numfigures = 0;
 	
-	public TagMetaData(PDDocument pdoc) {
+	
+	public TagMetaData(PdfReader pdoc) {
 		super();
-		this.pdoc = pdoc;
-		this.newMetadata = pdoc.getDocumentInformation();
+		this.preader = pdoc;
+		
 	}
 
-	public static void main(String[] args) {
-
-	}
-
-	public void setmetadata(PDDocument doc) {
-		pdoc = doc;
-		newMetadata = doc.getDocumentInformation();
+	public void setmetadata(PdfReader doc) {
+		preader = doc;
 	}
 
 	public static String toStringHeadersCSV() {
@@ -39,52 +40,47 @@ public class TagMetaData {
 		outs.append( "Creator,");
 		outs.append( "Producer," );
 		outs.append( "Creation Date,");
-		outs.append( "Modification Date," );
-		outs.append( "Trapped" );
+		outs.append( "Modification Date" );
 		return outs.toString();   
 	}
 	
 
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
-		outs.append(pdoc.getNumberOfPages() );
-		outs.append( "," + String.valueOf(newMetadata.getTitle()).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getAuthor()).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getSubject()).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getKeywords()).replaceAll(",", ""));
-		outs.append( "," + String.valueOf(newMetadata.getCreator()).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(newMetadata.getProducer()).replaceAll("[,;]", ""));
-		try {
-			outs.append( "," + String.valueOf(sdf.format(newMetadata.getCreationDate().getTime())).replaceAll(",", ""));
-			outs.append( "," + String.valueOf(sdf.format(newMetadata.getModificationDate().getTime())).replaceAll(",", ""));
-		} catch (IOException e) {
-			outs.append( ",,");
-			e.printStackTrace();
-		}
-		outs.append( "," + String.valueOf(newMetadata.getTrapped()).replaceAll(",", ""));
+		outs.append(preader.getNumberOfPages());
+		outs.append( "," + String.valueOf(preader.getInfo().get("Title")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Author")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Subject")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll(",", ""));	
+		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll(",", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll(",", ""));
 		return outs.toString();   
 	}
 	
 	
 	@Override
 	public String toString() {
-		StringBuffer outs = new StringBuffer();
-		outs.append("\nPage Count=" + pdoc.getNumberOfPages() );
-		outs.append( "\nTitle=" + newMetadata.getTitle() );
-		outs.append( "\nAuthor=" + newMetadata.getAuthor() );
-		outs.append( "\nSubject=" + newMetadata.getSubject() );
-		outs.append( "\nKeywords=" + newMetadata.getKeywords() );
-		outs.append( "\nCreator=" + newMetadata.getCreator() );
-		outs.append( "\nProducer=" + newMetadata.getProducer() );
-		try {
-			outs.append( "\nCreation Date=" + sdf.format(newMetadata.getCreationDate().getTime()));
-			outs.append( "\nModification Date=" + sdf.format(newMetadata.getModificationDate().getTime()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		outs.append( "\nTrapped=" + newMetadata.getTrapped() );
-		return outs.toString();   
+		return this.toStringDataCSV();  
 	}
+
+	public int getNumtable() {
+		return numtable;
+	}
+
+	public void setNumtableP1() {
+		this.numtable++;
+	}
+
+	public int getNumfigures() {
+		return numfigures;
+	}
+
+	public void setNumfiguresP1() {
+		this.numfigures++;
+	}
+	
 	
 	
 

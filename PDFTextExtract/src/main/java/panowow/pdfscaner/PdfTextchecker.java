@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,20 +28,10 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfDictionary;
-import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
-import com.itextpdf.text.pdf.PdfString;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.parser.TaggedPdfReaderTool;
-import com.sun.xml.internal.ws.api.addressing.WSEndpointReference.Metadata;
-
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -51,7 +40,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -263,9 +251,32 @@ public class PdfTextchecker extends Application {
     }
 
     
+	void getPDFmetaData(File pdffile) {
+    	
+    	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());
+    	TagMetaData meatadata;
+    	
+    	try {
+    		//use itext to get metatdata
+    		PdfReader reader = new PdfReader(pdffile.getAbsolutePath());
+    		meatadata = new TagMetaData(reader);
+    		logger.debug(meatadata.toString());    		
+			tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")), meatadata);
+			//add the println to cheep csv writer strings.
+			pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+    	} catch (IOException e) {
+    		logger.error(e);
+    		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
+    	}
+    	
+	}
+
+    
 	public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
 		PdfReader reader = new PdfReader(src);
-		tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")));		
+		tagtool.convertToXml(reader,  new FileOutputStream(new File("outparse.xml")));	
+		//record the metadata to CSV sheet here
+		
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
 		stamper.close();
 	}
@@ -394,23 +405,6 @@ public class PdfTextchecker extends Application {
 	}
 	
 
-	void getPDFmetaData(File pdffile) {
-    	
-    	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());
-    	TagMetaData meatadata;
-    	
-    	try {
-    		PDDocument doc = PDDocument.load(pdffile);
-    		meatadata = new TagMetaData(doc);
-    		logger.debug(meatadata.toString());
-    		pdfMetaDataCSV.add(meatadata.toStringDataCSV());
-    		doc.close();
-    	} catch (IOException e) {
-    		logger.error(e);
-    		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
-    	}
-    	
-	}
 
 
     void parsePDFdoc(File pdffile){
