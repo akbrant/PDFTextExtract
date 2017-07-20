@@ -80,7 +80,7 @@ public class TagMetaData {
 		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll(regex, ""));
 		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll(regex, ""));
 		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll(regex, ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Modified")).replaceAll(regex, ""));
 		outs.append( "," + this.getNumtable());
 		outs.append( "," + this.getNumtablerow());
 		outs.append( "," + this.getNumtableTH());
