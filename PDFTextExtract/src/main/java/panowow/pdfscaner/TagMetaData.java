@@ -69,17 +69,18 @@ public class TagMetaData {
 
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
+		String regex = "\r\n|[\r\n]|[,;]";
 		outs.append(this.getFilename());
 		outs.append( "," + this.getFilepath());
 		outs.append( "," + preader.getNumberOfPages());
-		outs.append( "," + String.valueOf(preader.getInfo().get("Title")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Author")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Subject")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll("[,;]", ""));	
-		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll("[,;]", ""));
-		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll("[,;]", ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Author")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll(regex, ""));
+		outs.append( "," + String.valueOf(preader.getInfo().get("ModificationDate")).replaceAll(regex, ""));
 		outs.append( "," + this.getNumtable());
 		outs.append( "," + this.getNumtablerow());
 		outs.append( "," + this.getNumtableTH());
