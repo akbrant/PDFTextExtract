@@ -332,6 +332,35 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("Figure Found and removed");
 		}
+		
+		/*InlineShapes*/
+		PdfName inlineshape = new PdfName("InlineShape");
+		if (inlineshape.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("inlineshape Found and removed");
+		}
+		
+		/*Tables of Contents and Links */
+		if (PdfName.TOC.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("TOC Found and removed");
+		}
+		
+
+		if (PdfName.TOCI.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("TOCI Found and removed");
+		}
+		
+
+		if (PdfName.LINK.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("LINK Found and removed");
+		}
+		
+		
+		
+		
 
 		
 		

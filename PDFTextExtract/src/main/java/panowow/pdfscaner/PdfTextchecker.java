@@ -198,13 +198,13 @@ public class PdfTextchecker extends Application {
     		} else {
     			logger.debug("File: " + file.getName());
 
-    			if (removeUATaggsCheckbox.isSelected()) {
+    			if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
     				removeUAtaggs(file);
     			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
     				parseHtmlReport(file);
-    			} else if (extractCheckbox.isSelected()){
+    			} else if (extractCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))){
     				parsePDFdoc(file);
-    			} else if (pdfMetaCheckBox.isSelected()) {
+    			} else if (pdfMetaCheckBox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
 	    			this.getPDFmetaData(file);
     			}
 				
