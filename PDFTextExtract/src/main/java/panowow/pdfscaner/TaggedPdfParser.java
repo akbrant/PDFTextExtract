@@ -299,7 +299,15 @@ public class TaggedPdfParser {
 		}
 		
 		/*Headers*/
-		if (PdfName.H2.equals(element.get(PdfName.S))) {
+		
+		/* Old Acrobat 7.x headers */
+		PdfName oldh2 = new PdfName("heading-2");
+		PdfName oldh3 = new PdfName("heading-3");
+		PdfName oldh4 = new PdfName("heading-4");
+		PdfName oldh5 = new PdfName("heading-5");
+		
+		
+		if (PdfName.H2.equals(element.get(PdfName.S)) || oldh2.equals(element.get(PdfName.S)) ) {
 			element.clear();
 			logger.debug("Header H2 Found and removed");
 		}
