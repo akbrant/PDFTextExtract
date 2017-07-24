@@ -28,9 +28,13 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfString;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -220,6 +224,7 @@ public class PdfTextchecker extends Application {
 			dir.mkdirs();
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
+			removeannots(reader);
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
 			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));
 			stamper.close();
@@ -232,6 +237,21 @@ public class PdfTextchecker extends Application {
     		logger.debug("cant read file or metadata: " + file.getAbsolutePath());   
 		}    	
     }
+    
+    void removeannots(PdfReader reader){
+    	for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+    	    PdfArray array = reader.getPageN(i).getAsArray(PdfName.ANNOTS);
+    	    if (array == null) continue;
+    	    for (int j = 0; j < array.size(); j++) {
+    	        PdfDictionary annot = array.getAsDict(j);
+    	        PdfString text = annot.getAsString(PdfName.CONTENTS);
+    	        logger.debug(text);
+    	        annot.clear();    	        
+    	    }
+    	}
+    	
+    }
+    
     
 	void getPDFmetaData(File pdffile) {    	
     	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());

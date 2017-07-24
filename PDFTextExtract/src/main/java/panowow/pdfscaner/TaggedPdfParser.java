@@ -366,7 +366,11 @@ public class TaggedPdfParser {
 			logger.debug("LINK Found and removed");
 		}
 		
-		
+
+		if (PdfName.ANNOTS.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Untagged Annotation Found and removed");
+		}
 		
 		
 
