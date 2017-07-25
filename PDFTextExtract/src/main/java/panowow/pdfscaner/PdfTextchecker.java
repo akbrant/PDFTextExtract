@@ -2,6 +2,7 @@
 package panowow.pdfscaner;
 
 import java.awt.Desktop;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.cos.COSDocument;
@@ -34,6 +36,7 @@ import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfString;
+import com.itextpdf.text.xml.xmp.XmpWriter;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -75,6 +78,7 @@ public class PdfTextchecker extends Application {
 	
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
+	
 	
 	
 	
@@ -220,15 +224,20 @@ public class PdfTextchecker extends Application {
 
     void removeUAtaggs(File file) {
     	try {
+    		Map<String, String> infoitext;
 			File dir = new File(file.getParent() + "/removedtags" );
 			dir.mkdirs();
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
+			logger.debug("Checking for anontations..");
 			removeannots(reader);
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
-			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));
+			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));			
+			logger.debug("Checking for title..and setting if blank");
+			infoitext = this.checkNsettitle(reader, file);
+			stamper.setMoreInfo(infoitext);
 			stamper.close();
-			
+			reader.close();
 		} catch (IOException e) {
     		logger.error(e);
     		logger.debug("cant read file or metadata: " + file.getAbsolutePath());   
@@ -252,6 +261,19 @@ public class PdfTextchecker extends Application {
     	
     }
     
+    Map<String, String> checkNsettitle(PdfReader reader, File file){
+    	String regex = "\r\n|[\r\n]|[,;]";
+    	String title = String.valueOf(reader.getInfo().get("Title")).replaceAll(regex, "");
+    	Map<String, String> l_infoitext = null;
+    	if (title.equals("null") || title == null || title.length()<1) {  //no title set 
+    		 l_infoitext= reader.getInfo();
+    	     String fileNameWithOutExt = file.getName().replaceFirst("[.][^.]+$", "");
+    	     l_infoitext.put("Title", fileNameWithOutExt);
+    	} else {
+    		 l_infoitext = reader.getInfo();
+    	}
+		return l_infoitext;
+    }
     
 	void getPDFmetaData(File pdffile) {    	
     	logger.debug("light parseing for metata PDF doc.... of " + pdffile.getName());
