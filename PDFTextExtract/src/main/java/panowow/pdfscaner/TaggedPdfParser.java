@@ -301,12 +301,37 @@ public class TaggedPdfParser {
 		/*Headers*/
 		
 		/* Old Acrobat 7.x headers */
-		PdfName oldh2 = new PdfName("heading-2");
-		PdfName oldh3 = new PdfName("heading-3");
-		PdfName oldh4 = new PdfName("heading-4");
-		PdfName oldh5 = new PdfName("heading-5");
+		PdfName oldh1 = new PdfName("Heading 1");
+		PdfName oldh2 = new PdfName("Heading 2");
+		PdfName oldh3 = new PdfName("Heading 3");
+		PdfName oldh4 = new PdfName("Heading 4");
+		PdfName oldh5 = new PdfName("Heading 5");
+
+		if (oldh1.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Heading#201 Found and removed");
+		}		
+		if (oldh2.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Heading#202 Found and removed");
+		}
+
+		if (oldh3.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Heading#203 Found and removed");
+		}
+		if (oldh4.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Heading#203 Found and removed");
+		}
+		if (oldh5.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Heading#203 Found and removed");
+		}
+
 		
-		
+	
+		/*Headers*/	
 		if (PdfName.H2.equals(element.get(PdfName.S)) || oldh2.equals(element.get(PdfName.S)) ) {
 			element.clear();
 			logger.debug("Header H2 Found and removed");
@@ -366,16 +391,7 @@ public class TaggedPdfParser {
 			logger.debug("LINK Found and removed");
 		}
 		
-
-		if (PdfName.ANNOTS.equals(element.get(PdfName.S))) {
-			element.clear();
-			logger.debug("Untagged Annotation Found and removed");
-		}
-		
-		
-
-		
-		
+	
 		
 	}
 	
