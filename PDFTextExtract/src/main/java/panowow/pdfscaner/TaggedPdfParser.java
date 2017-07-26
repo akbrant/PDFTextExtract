@@ -381,6 +381,12 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("inlineshape Found and removed");
 		}
+		/*Shapes*/
+		PdfName shape = new PdfName("Shape");
+		if (shape.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("shape Found and removed");
+		}
 		
 		/*Tables of Contents and Links */
 		/*if (PdfName.TOC.equals(element.get(PdfName.S))) {
