@@ -289,13 +289,13 @@ public class TaggedPdfParser {
 		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
 			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
 			logger.debug("Table Found and removed");
-			element.clear();
+			element.remove(PdfName.S);
 		}
 		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 		}
 		if (PdfName.TH.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 		}
 		
 		/*Headers*/
@@ -308,24 +308,24 @@ public class TaggedPdfParser {
 		PdfName oldh5 = new PdfName("Heading 5");
 
 		if (oldh1.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Heading#201 Found and removed");
 		}		
 		if (oldh2.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Heading#202 Found and removed");
 		}
 
 		if (oldh3.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Heading#203 Found and removed");
 		}
 		if (oldh4.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Heading#203 Found and removed");
 		}
 		if (oldh5.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Heading#203 Found and removed");
 		}
 
@@ -333,76 +333,76 @@ public class TaggedPdfParser {
 	
 		/*Headers*/	
 		if (PdfName.H2.equals(element.get(PdfName.S)) || oldh2.equals(element.get(PdfName.S)) ) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Header H2 Found and removed");
 		}
 		if (PdfName.H3.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Header H3 Found and removed");
 		}		
 		if (PdfName.H4.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Header H4 Found and removed");
 		}	
 		if (PdfName.H5.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Header H5 Found and removed");
 		}	
 		if (PdfName.H6.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Header H6 Found and removed");
 		}	
 
 				
 		/*Lists*/
 		if (PdfName.L.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("List L Found and removed");
 		}
 		if (PdfName.LI.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("List LI Found and removed");
 		}
 
 		/*Figures*/
 		if (PdfName.FIGURE.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Figure Found and removed");
 		}
 		/*charts*/
 		PdfName chart = new PdfName("Chart");
 		if (chart.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("Chart Found and removed");
 		}
 		/*InlineShapes*/
 		PdfName inlineshape = new PdfName("InlineShape");
 		if (inlineshape.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("inlineshape Found and removed");
 		}
 		/*Shapes*/
 		PdfName shape = new PdfName("Shape");
 		if (shape.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("shape Found and removed");
 		}
 		
 		/*Tables of Contents and Links */
 		/*if (PdfName.TOC.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("TOC Found and removed");
 		}
 		
 
 		if (PdfName.TOCI.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("TOCI Found and removed");
 		}
 		
 
 		if (PdfName.LINK.equals(element.get(PdfName.S))) {
-			element.clear();
+			element.remove(PdfName.S);
 			logger.debug("LINK Found and removed");
 		}
 		*/

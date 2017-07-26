@@ -230,7 +230,7 @@ public class PdfTextchecker extends Application {
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
 			logger.debug("Checking for anontations..");
-			removeannots(reader);
+			//removeannots(reader);
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
 			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));			
 			logger.debug("Checking for title..and setting if blank");
