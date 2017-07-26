@@ -348,8 +348,12 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("Header H5 Found and removed");
 		}	
-		
-		
+		if (PdfName.H6.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Header H6 Found and removed");
+		}	
+
+				
 		/*Lists*/
 		if (PdfName.L.equals(element.get(PdfName.S))) {
 			element.clear();
@@ -365,7 +369,12 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("Figure Found and removed");
 		}
-		
+		/*charts*/
+		PdfName chart = new PdfName("Chart");
+		if (chart.equals(element.get(PdfName.S))) {
+			element.clear();
+			logger.debug("Chart Found and removed");
+		}
 		/*InlineShapes*/
 		PdfName inlineshape = new PdfName("InlineShape");
 		if (inlineshape.equals(element.get(PdfName.S))) {
@@ -374,7 +383,7 @@ public class TaggedPdfParser {
 		}
 		
 		/*Tables of Contents and Links */
-		if (PdfName.TOC.equals(element.get(PdfName.S))) {
+		/*if (PdfName.TOC.equals(element.get(PdfName.S))) {
 			element.clear();
 			logger.debug("TOC Found and removed");
 		}
@@ -390,7 +399,7 @@ public class TaggedPdfParser {
 			element.clear();
 			logger.debug("LINK Found and removed");
 		}
-		
+		*/
 	
 		
 	}
