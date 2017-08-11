@@ -53,7 +53,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
- 
+import javafx.scene.layout.Pane;
+
 public class PdfTextchecker extends Application {
 	
 	private static Logger logger = Logger.getLogger(PdfTextchecker.class.getName());
@@ -77,23 +78,24 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox scanORCCheckbox;
 
 	//UA tag support
+	@FXML private Pane Uatagspane;
 	@FXML private GridPane UaGridPane;
 	
 	@FXML public CheckBox uatable;
-	@FXML private CheckBox uatablerow;
-	@FXML private CheckBox uath;
-	@FXML private CheckBox ua7headers;
+	@FXML public CheckBox uatablerow;
+	@FXML public CheckBox uath;
+	@FXML public CheckBox ua7headers;
 	
-	@FXML private CheckBox uaH2H6;
-	@FXML private CheckBox uashape;
-	@FXML private CheckBox uatoc;
-	@FXML private CheckBox uatoci;	
-	@FXML private CheckBox ualink;
-	@FXML private CheckBox ual;
-	@FXML private CheckBox uali;
-	@FXML private CheckBox uafigure;
-	@FXML private CheckBox uachart;
-	@FXML private CheckBox uainlineshape;
+	@FXML public CheckBox uaH2H6;
+	@FXML public CheckBox uashape;
+	@FXML public CheckBox uatoc;
+	@FXML public CheckBox uatoci;	
+	@FXML public CheckBox ualink;
+	@FXML public CheckBox ual;
+	@FXML public CheckBox uali;
+	@FXML public CheckBox uafigure;
+	@FXML public CheckBox uachart;
+	@FXML public CheckBox uainlineshape;
 	
 	
 	
@@ -159,6 +161,17 @@ public class PdfTextchecker extends Application {
         } catch (IOException ex) {
             logger.error(ex);
         }
+    }
+    
+    @FXML
+    void enableUAtags(ActionEvent event) {
+    	logger.debug("hit Remove UA Tags check box...");
+    	if (Uatagspane.isDisabled()) {
+    		Uatagspane.setDisable(false);
+    	} else {
+    		Uatagspane.setDisable(true);
+    	}
+    	
     }
     
     @FXML
