@@ -52,6 +52,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
  
 public class PdfTextchecker extends Application {
 	
@@ -74,6 +75,26 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox removeUATaggsCheckbox;
 	@FXML private CheckBox pdfMetaCheckBox;
 	@FXML private CheckBox scanORCCheckbox;
+
+	//UA tag support
+	@FXML private GridPane UaGridPane;
+	
+	@FXML private CheckBox uatable;
+	@FXML private CheckBox uatablerow;
+	@FXML private CheckBox uath;
+	@FXML private CheckBox ua7headers;
+	
+	@FXML private CheckBox uaH2H6;
+	@FXML private CheckBox uashape;
+	@FXML private CheckBox uatoc;
+	@FXML private CheckBox uatoci;	
+	@FXML private CheckBox ualink;
+	@FXML private CheckBox ual;
+	@FXML private CheckBox uali;
+	@FXML private CheckBox uafigure;
+	@FXML private CheckBox uachart;
+	@FXML private CheckBox uainlineshape;
+	
 	
 	
 	private PdfDictionary structTreeRoot;

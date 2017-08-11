@@ -12,13 +12,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="267.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
+<StackPane prefHeight="420.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
 <children>
 <StackPane>
 <children>
 <VBox spacing="10.0">
 <children>
-<GridPane prefHeight="192.0" prefWidth="440.0">
+<GridPane prefHeight="131.0" prefWidth="424.0">
 <children>
 <Label text="Folder Selected:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 <TextField fx:id="Folderselected" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -43,7 +43,37 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 </rowConstraints>
 </GridPane>
-                  <TextArea fx:id="pdftextTextArea" prefHeight="200.0" prefWidth="200.0" />
+                  <TextArea fx:id="pdftextTextArea" prefHeight="80.0" prefWidth="424.0" />
+                  <GridPane fx:id="UaGridPane">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <CheckBox fx:id="uatable" mnemonicParsing="false" text="Table" />
+                        <CheckBox fx:id="uatablerow" mnemonicParsing="false" text="TableRow" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="uath" mnemonicParsing="false" text="TH" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="ua7headers" mnemonicParsing="false" text="7.x Headers" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="uaH2H6" mnemonicParsing="false" text="H2 to H6" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="uashape" mnemonicParsing="false" text="Shape" GridPane.columnIndex="2" />
+                        <CheckBox fx:id="uatoc" mnemonicParsing="false" text="TOC" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="uatoci" mnemonicParsing="false" text="TOCI" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="ualink" mnemonicParsing="false" text="LINK" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="ual" mnemonicParsing="false" text="Lists (L)" GridPane.columnIndex="1" />
+                        <CheckBox fx:id="uali" mnemonicParsing="false" text="Lists  (LI)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="uafigure" mnemonicParsing="false" text="Figure" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="uachart" mnemonicParsing="false" text="Chart" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="uainlineshape" mnemonicParsing="false" text="InlineShape" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                     </children>
+                  </GridPane>
 </children>
 </VBox>
 </children>
