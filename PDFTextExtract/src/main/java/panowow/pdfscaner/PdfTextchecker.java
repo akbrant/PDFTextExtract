@@ -79,7 +79,7 @@ public class PdfTextchecker extends Application {
 	//UA tag support
 	@FXML private GridPane UaGridPane;
 	
-	@FXML private CheckBox uatable;
+	@FXML public CheckBox uatable;
 	@FXML private CheckBox uatablerow;
 	@FXML private CheckBox uath;
 	@FXML private CheckBox ua7headers;
@@ -170,7 +170,7 @@ public class PdfTextchecker extends Application {
     	
     	if (defaultfolder != null) {
     		File[] files = new File(defaultfolder).listFiles();
-    		tagtool = new TaggedPdfParser();
+    		tagtool = new TaggedPdfParser(this);
     		showFiles(files);
 
     		try {

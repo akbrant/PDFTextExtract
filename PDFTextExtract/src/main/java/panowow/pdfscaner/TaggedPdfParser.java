@@ -79,7 +79,13 @@ public class TaggedPdfParser {
 	/**Flag to remove UA tags while parsing or just report on UA tags */
 	private boolean ripouttags = false;
 	
+	protected PdfTextchecker pdfTextchecker;
+	
 	private static Logger logger = Logger.getLogger(TaggedPdfParser.class.getName());
+
+	public TaggedPdfParser(PdfTextchecker pdfTextchecker) {
+		this.pdfTextchecker = pdfTextchecker;
+	}
 
 	/**
 	 * Parses a string with structured content.
@@ -285,15 +291,20 @@ public class TaggedPdfParser {
 		if (element == null)
 			return;
 		
-		/*Tables */
-		if (PdfName.TABLE.equals(element.get(PdfName.S))) {
-			//element.put(PdfName.ALT, new PdfString("Figure without an Alt description"));
-			logger.debug("Table Found and removed");
-			element.remove(PdfName.S);
+		/* Tables */
+		if (this.pdfTextchecker.uatable.isSelected()) {
+			if (PdfName.TABLE.equals(element.get(PdfName.S))) {
+				// element.put(PdfName.ALT, new PdfString("Figure without an Alt
+				// description"));
+				logger.debug("Table Found and removed");
+				element.remove(PdfName.S);
+			}
 		}
+
 		if (PdfName.TABLEROW.equals(element.get(PdfName.S))) {
 			element.remove(PdfName.S);
 		}
+		
 		if (PdfName.TH.equals(element.get(PdfName.S))) {
 			element.remove(PdfName.S);
 		}
