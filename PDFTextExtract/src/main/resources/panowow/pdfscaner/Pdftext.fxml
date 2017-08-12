@@ -83,6 +83,7 @@
                                     <CheckBox fx:id="uafigure" mnemonicParsing="false" selected="true" text="Figure" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <CheckBox fx:id="uachart" mnemonicParsing="false" selected="true" text="Chart" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <CheckBox fx:id="uainlineshape" mnemonicParsing="false" selected="true" text="InlineShape" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <CheckBox fx:id="uatagga" mnemonicParsing="false" text="Tagged Annotations" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                            </children>

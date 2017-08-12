@@ -96,7 +96,7 @@ public class PdfTextchecker extends Application {
 	@FXML public CheckBox uafigure;
 	@FXML public CheckBox uachart;
 	@FXML public CheckBox uainlineshape;
-	
+	@FXML public CheckBox uatagga;
 	
 	
 	private PdfDictionary structTreeRoot;
@@ -263,8 +263,10 @@ public class PdfTextchecker extends Application {
 			dir.mkdirs();
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
-			logger.debug("Checking for anontations..");
-			//removeannots(reader);
+			if (uatagga.isSelected()) { 
+				logger.debug("Checking for anontations..");
+				removeannots(reader);
+			}			
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
 			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));			
 			logger.debug("Checking for title..and setting if blank");
@@ -288,8 +290,8 @@ public class PdfTextchecker extends Application {
     	    for (int j = 0; j < array.size(); j++) {
     	        PdfDictionary annot = array.getAsDict(j);
     	        PdfString text = annot.getAsString(PdfName.CONTENTS);
-    	        logger.debug(text);
-    	        annot.clear();    	        
+    	        logger.debug(text + "removing tagged annotations");
+    	        annot.remove(PdfName.CONTENTS);    	        
     	    }
     	}
     	

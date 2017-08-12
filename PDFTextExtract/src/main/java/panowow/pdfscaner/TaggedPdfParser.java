@@ -325,24 +325,24 @@ public class TaggedPdfParser {
 		if (this.pdfTextchecker.ua7headers.isSelected()) {
 			if (oldh1.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading#201 Found and removed");
+				logger.debug("Heading 1 Found and removed");
 			}
 			if (oldh2.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading#202 Found and removed");
+				logger.debug("Heading 2 Found and removed");
 			}
 
 			if (oldh3.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading#203 Found and removed");
+				logger.debug("Heading 3 Found and removed");
 			}
 			if (oldh4.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading#203 Found and removed");
+				logger.debug("Heading 4 Found and removed");
 			}
 			if (oldh5.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading#203 Found and removed");
+				logger.debug("Heading 5 Found and removed");
 			}
 		}	
 	
@@ -396,6 +396,12 @@ public class TaggedPdfParser {
 			}
 		}
 
+		PdfName captionfig = new PdfName("Caption Figure");
+		if (captionfig.equals(element.get(PdfName.S))) {
+			element.remove(PdfName.S);
+			logger.debug("Caption Figure Found and removed");
+		}
+		
 		/* charts */
 
 		if (this.pdfTextchecker.uachart.isSelected()) {
