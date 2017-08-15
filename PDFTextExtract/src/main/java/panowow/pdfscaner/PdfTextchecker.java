@@ -98,6 +98,8 @@ public class PdfTextchecker extends Application {
 	@FXML public CheckBox uainlineshape;
 	@FXML public CheckBox uatagga;
 	
+	//Remove tags Extras
+	@FXML public CheckBox eaxml; //prints out an xml file of content and UA tags, great for debugging
 	
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
@@ -258,21 +260,31 @@ public class PdfTextchecker extends Application {
 
     void removeUAtaggs(File file) {
     	try {
-    		Map<String, String> infoitext;
+    		Map<String, String> infoitext = null;
 			File dir = new File(file.getParent() + "/removedtags" );
 			dir.mkdirs();
+			
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
 			if (uatagga.isSelected()) { 
 				logger.debug("Checking for anontations..");
 				removeannots(reader);
 			}			
-			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + file.getName() + ".xml")));	
-			PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));			
+			
+			PdfStamper stamper = null;
+			if (eaxml.isSelected() ) {
+				File dirxml = new File(file.getParent() + "/xmldocs" );
+				dirxml.mkdirs();
+				tagtool.convertToXml(reader,  new FileOutputStream(new File(dirxml.getAbsolutePath() +"/" + file.getName() + ".xml")));	
+				logger.debug("Printing out a XML doc with UA tags for debugging UA tags..");
+			}
+		
+			stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));	
 			logger.debug("Checking for title..and setting if blank");
-			infoitext = this.checkNsettitle(reader, file);
+			infoitext = this.checkNsettitle(reader, file); 
 			stamper.setMoreInfo(infoitext);
-			stamper.close();
+			stamper.close();	
+						
 			reader.close();
 		} catch (IOException e) {
     		logger.error(e);
