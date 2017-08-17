@@ -316,33 +316,33 @@ public class TaggedPdfParser {
 		/*Headers*/
 		
 		/* Old Acrobat 7.x headers */
-		PdfName oldh1 = new PdfName("Heading 1");
-		PdfName oldh2 = new PdfName("Heading 2");
-		PdfName oldh3 = new PdfName("Heading 3");
-		PdfName oldh4 = new PdfName("Heading 4");
-		PdfName oldh5 = new PdfName("Heading 5");
+		PdfName oldh1 = new PdfName("heading 1");
+		PdfName oldh2 = new PdfName("heading 2");
+		PdfName oldh3 = new PdfName("heading 3");
+		PdfName oldh4 = new PdfName("heading 4");
+		PdfName oldh5 = new PdfName("heading 5");
 
 		if (this.pdfTextchecker.ua7headers.isSelected()) {
 			if (oldh1.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading 1 Found and removed");
+				logger.debug("heading 1 Found and removed");
 			}
 			if (oldh2.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading 2 Found and removed");
+				logger.debug("heading 2 Found and removed");
 			}
 
 			if (oldh3.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading 3 Found and removed");
+				logger.debug("heading 3 Found and removed");
 			}
 			if (oldh4.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading 4 Found and removed");
+				logger.debug("heading 4 Found and removed");
 			}
 			if (oldh5.equals(element.get(PdfName.S))) {
 				element.remove(PdfName.S);
-				logger.debug("Heading 5 Found and removed");
+				logger.debug("heading 5 Found and removed");
 			}
 		}	
 	
