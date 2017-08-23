@@ -1,7 +1,7 @@
 node {
    def mvnHome
    stage('Preparation') { // for display purposes
-    checkout scm: [$class: 'GitSCM', source: 'https://github.com/akbrant/PDFTextExtract.git', revision: 'fixtags', clean: true, credentialsId: 'github'], poll: false
+    checkout scm: [$class: 'GitSCM', source: 'https://github.com/akbrant/PDFTextExtract.git', revision: 'fixtags', clean: true, credentialsId: '5d1db58f-462f-4a2c-b052-1007264212d2'], poll: false
    }
    stage('Clean') {
       if (isUnix()) {
