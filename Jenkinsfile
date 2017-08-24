@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Package') {
       steps {
-        sh '/opt/apache-maven-3.5.0/bin/mvn -Dmaven.test.failure.ignore package'
+        sh '/opt/apache-maven-3.5.0/bin/mvn -Dmaven.test.failure.ignore jfx:jar'
       }
     }
   }
