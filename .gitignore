@@ -1,0 +1,6 @@
+*/target/*
+/target
+/jobsubmit.properties
+/docs/**/*.txt
+*/.settings/*
+*/.metadata/*

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="447.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
+<children>
+<StackPane prefHeight="417.0" prefWidth="424.0">
+<children>
+<VBox spacing="10.0">
+<children>
+<GridPane prefHeight="131.0" prefWidth="424.0">
+<children>
+<Label text="Folder Selected:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+<TextField fx:id="Folderselected" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="PdfFolderselectbtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openfoldercho" text="Select Folder" textAlignment="CENTER" />
+                        <Button fx:id="PDFScanStartbutt" mnemonicParsing="false" onAction="#PDFScanStart" text="Scan Folder" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <CheckBox fx:id="extractCheckbox" mnemonicParsing="false" text="Scan ORC &amp;Extract  PDF Text" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="pasrseHtmlCheckbox" mnemonicParsing="false" text="Parse HTML Reports" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="removeUATaggsCheckbox" mnemonicParsing="false" onAction="#enableUAtags" text="Remove UA Taggs" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="scanORCCheckbox" mnemonicParsing="false" text="Scan ORC Only" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="pdfMetaCheckBox" mnemonicParsing="false" text="PDF MetaCSV" GridPane.rowIndex="4" />
+</children>
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
+<ColumnConstraints hgrow="SOMETIMES" maxWidth="228.0" minWidth="10.0" prefWidth="189.0" />
+</columnConstraints>
+<rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+</rowConstraints>
+</GridPane>
+                  <TextArea fx:id="pdftextTextArea" prefHeight="80.0" prefWidth="424.0" />
+                  <Pane fx:id="Uatagspane" disable="true" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="424.0">
+                           <children>
+                              <Label text="UA Tags:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <GridPane fx:id="UaGridPane">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <CheckBox fx:id="uatable" mnemonicParsing="false" selected="true" text="Table" />
+                                    <CheckBox fx:id="uatablerow" mnemonicParsing="false" selected="true" text="TableRow" GridPane.rowIndex="1" />
+                                    <CheckBox fx:id="uath" mnemonicParsing="false" selected="true" text="TH" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="ua7headers" mnemonicParsing="false" selected="true" text="7.x Headers" GridPane.rowIndex="3" />
+                                    <CheckBox fx:id="uaH2H6" mnemonicParsing="false" selected="true" text="H2 to H6" GridPane.rowIndex="4" />
+                                    <CheckBox fx:id="uashape" mnemonicParsing="false" selected="true" text="Shape" GridPane.columnIndex="2" />
+                                    <CheckBox fx:id="uatoc" mnemonicParsing="false" text="TOC" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <CheckBox fx:id="uatoci" mnemonicParsing="false" text="TOCI" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="ualink" mnemonicParsing="false" text="LINK" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <CheckBox fx:id="ual" mnemonicParsing="false" selected="true" text="Lists (L)" GridPane.columnIndex="1" />
+                                    <CheckBox fx:id="uali" mnemonicParsing="false" selected="true" text="Lists  (LI)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <CheckBox fx:id="uafigure" mnemonicParsing="false" selected="true" text="Figure" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="uachart" mnemonicParsing="false" selected="true" text="Chart" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <CheckBox fx:id="uainlineshape" mnemonicParsing="false" selected="true" text="InlineShape" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <CheckBox fx:id="uatagga" mnemonicParsing="false" text="Tagged Annotations" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                 </children>
+                              </GridPane>
+                              <Label text="Extras:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </padding>
+                              </Label>
+                              <GridPane prefHeight="84.0" prefWidth="424.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <CheckBox fx:id="eaxml" mnemonicParsing="false" text="Print out XML files" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+</children>
+</VBox>
+</children>
+</StackPane>
+</children>
+<padding>
+<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+</padding>
+</StackPane>
