@@ -123,32 +123,8 @@ public class PdfTextchecker extends Application {
  
         final FileChooser fileChooser = new FileChooser();
  
-        final Button openButton = new Button("Open a Picture...");
-        final Button openMultipleButton = new Button("Open Pictures...");
-
         
-        openButton.setOnAction(
-            new EventHandler<ActionEvent>() {
-                public void handle(final ActionEvent e) {
-                    File file = fileChooser.showOpenDialog(stage);
-                    if (file != null) {
-                        openFile(file);
-                    }
-                }
-            });
- 
-        openMultipleButton.setOnAction(
-            new EventHandler<ActionEvent>() {
-                public void handle(final ActionEvent e) {
-                    List<File> list =
-                        fileChooser.showOpenMultipleDialog(stage);
-                    if (list != null) {
-                        for (File file : list) {
-                            openFile(file);
-                        }
-                    }
-                }
-            });      
+      
     }
  
     

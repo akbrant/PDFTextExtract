@@ -86,7 +86,7 @@
                                     <CheckBox fx:id="uatagga" mnemonicParsing="false" text="Tagged Annotations" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
-                              <Label text="Extras:">
+                              <Label text="Run UA Tags:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -104,7 +104,7 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <CheckBox fx:id="eaxml" mnemonicParsing="false" text="Print out XML files" />
+                                    <CheckBox fx:id="eaxml" mnemonicParsing="false" selected="true"  text="Run UA remover" />
                                  </children>
                               </GridPane>
                            </children>
