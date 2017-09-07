@@ -39,8 +39,13 @@ import com.itextpdf.text.pdf.PdfString;
 import com.itextpdf.text.xml.xmp.XmpWriter;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker.State;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -152,45 +157,89 @@ public class PdfTextchecker extends Application {
     	
     }
     
+    
+    Task longRunningTask = new Task<Void>() {
+
+        @Override
+        public Void call() throws Exception {
+        	updateMessage("start scanning....");
+        	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
+        	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
+        	
+        	int i;
+            for(i = 1; i <= 100; i++){
+                updateProgress(i, 100);
+                Thread.sleep(50);
+            }
+        	
+        	if (defaultfolder != null) {
+        		File[] files = new File(defaultfolder).listFiles();
+        		tagtool = new TaggedPdfParser(PdfTextchecker.this);
+        		updateMessage("start scanning.... files" + files.toString());
+        		showFiles(files);
+        			
+        		try {
+        			logger.debug(System.getProperties());
+        			logger.debug(System.getProperty("file.separator"));
+        			String filesep = System.getProperty("file.separator");
+        			if (scanORCCheckbox.isSelected()) {
+    	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
+    	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
+    	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
+    	    			NotaPDF.clear();
+    	    			aPDFNonOCR.clear();
+    	    			aPDFOCR.clear();
+        			}
+        			if (pasrseHtmlCheckbox.isSelected()) {
+    	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
+    	    			htmlreportsCSV.clear();
+        			}
+        			if (pdfMetaCheckBox.isSelected()) {
+    	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
+    	    			pdfMetaDataCSV.clear();
+        			}
+        		} catch (IOException e) {
+        			logger.debug(e);
+        		}
+
+        	}
+
+           
+            return null;
+        }
+    };
+    
     @FXML
     void PDFScanStart(ActionEvent event) {
-
-    	logger.debug("start scanning....");
-    	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
-    	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
+    	Thread th = new Thread(longRunningTask);
+    	th.setDaemon(true);
+    	//pdftextTextArea.textProperty().bind(longRunningTask.messageProperty());
     	
-    	if (defaultfolder != null) {
-    		File[] files = new File(defaultfolder).listFiles();
-    		tagtool = new TaggedPdfParser(this);
-    		showFiles(files);
-
-    		try {
-    			logger.debug(System.getProperties());
-    			logger.debug(System.getProperty("file.separator"));
-    			String filesep = System.getProperty("file.separator");
-    			if (scanORCCheckbox.isSelected()) {
-	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
-	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
-	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
-	    			NotaPDF.clear();
-	    			aPDFNonOCR.clear();
-	    			aPDFOCR.clear();
-    			}
-    			if (pasrseHtmlCheckbox.isSelected()) {
-	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
-	    			htmlreportsCSV.clear();
-    			}
-    			if (pdfMetaCheckBox.isSelected()) {
-	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
-	    			pdfMetaDataCSV.clear();
-    			}
-    		} catch (IOException e) {
-    			logger.debug(e);
-    		}
-
-    	}
-
+    	longRunningTask.stateProperty().addListener(new ChangeListener<State>(){
+    	    @Override
+    	    public void changed(ObservableValue<? extends State> observable, State oldValue, State state) {
+    	        System.out.println(state);
+    	    }
+    	});
+    	longRunningTask.progressProperty().addListener(new ChangeListener<Number>(){
+    		@Override
+    	    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number val) {
+    	        Platform.runLater(new Runnable(){
+    	            @Override
+    	            public void run() {
+    	            	pdftextTextArea.appendText("Value : " + val.intValue() + "\n");
+    	            }
+    	        });
+    	    }
+    	});
+    	
+    	
+    	th.start();
+    	
     }
+    
+    
+    
     
     public void showFiles(File[] files)
     {
@@ -213,7 +262,6 @@ public class PdfTextchecker extends Application {
     		if (file.isDirectory()) {
     			logger.debug("Directory: " + file.getName());
     			strbuff.append("Directory: " + file.getName() + "\n");
-    			pdftextTextArea.setText(strbuff.toString());
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
@@ -229,7 +277,6 @@ public class PdfTextchecker extends Application {
     			}
 				
     			strbuff.append(file.getName() + "\n");
-    			pdftextTextArea.setText(strbuff.toString());
     		}
     	} 
     }
