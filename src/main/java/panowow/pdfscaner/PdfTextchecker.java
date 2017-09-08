@@ -109,6 +109,7 @@ public class PdfTextchecker extends Application {
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
 	
+	private String txtstring = "";
 	
 	
 	
@@ -117,7 +118,7 @@ public class PdfTextchecker extends Application {
     
     	Parent root = FXMLLoader.load(getClass().getResource("Pdftext.fxml"));
 		Scene scene = new Scene(root);
-
+		
 		stage.setTitle("Pick PDF directory");
 		stage.setScene(scene);
 		stage.setResizable(false);
@@ -127,7 +128,8 @@ public class PdfTextchecker extends Application {
 		this.primaryStage = stage;
  
         final FileChooser fileChooser = new FileChooser();
- 
+        
+
         
       
     }
@@ -177,7 +179,7 @@ public class PdfTextchecker extends Application {
         		tagtool = new TaggedPdfParser(PdfTextchecker.this);
         		updateMessage("start scanning.... files" + files.toString());
         		showFiles(files);
-        			
+        		updateMessage(files.toString());	
         		try {
         			logger.debug(System.getProperties());
         			logger.debug(System.getProperty("file.separator"));
@@ -218,7 +220,7 @@ public class PdfTextchecker extends Application {
     	longRunningTask.stateProperty().addListener(new ChangeListener<State>(){
     	    @Override
     	    public void changed(ObservableValue<? extends State> observable, State oldValue, State state) {
-    	        System.out.println(state);
+    	        System.out.println(state);           	
     	    }
     	});
     	longRunningTask.progressProperty().addListener(new ChangeListener<Number>(){
@@ -227,15 +229,12 @@ public class PdfTextchecker extends Application {
     	        Platform.runLater(new Runnable(){
     	            @Override
     	            public void run() {
-    	            	pdftextTextArea.appendText("Value : " + val.intValue() + "\n");
+    	            	//pdftextTextArea.appendText("Value : " + val.intValue() + "\n");	
     	            }
     	        });
     	    }
     	});
-    	
-    	
-    	th.start();
-    	
+    	th.start();	
     }
     
     
@@ -265,7 +264,8 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-
+    			txtstring += file.getName() + "\n";
+    			updateStatus(file.getName() + "\n");
     			if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
     				removeUAtaggs(file);
     			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
@@ -281,12 +281,21 @@ public class PdfTextchecker extends Application {
     	} 
     }
 
+
+	private void updateStatus(String message) {
+	    if (Platform.isFxApplicationThread()) {
+	    	pdftextTextArea.appendText(message);
+	    } else {
+	     
+	        Platform.runLater(() -> pdftextTextArea.appendText(message));
+	    }
+	}
+	
     void removeUAtaggs(File file) {
     	try {
     		Map<String, String> infoitext = null;
 			File dir = new File(file.getParent() + "/removedtags" );
 			dir.mkdirs();
-			
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
 			if (uatagga.isSelected()) { 
