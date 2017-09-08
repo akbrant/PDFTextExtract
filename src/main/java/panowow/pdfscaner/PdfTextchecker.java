@@ -108,11 +108,7 @@ public class PdfTextchecker extends Application {
 	
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
-	
-	private String txtstring = "";
-	
-	
-	
+		
     @Override
     public void start(final Stage stage) throws IOException {
     
@@ -127,11 +123,7 @@ public class PdfTextchecker extends Application {
 
 		this.primaryStage = stage;
  
-        final FileChooser fileChooser = new FileChooser();
-        
-
-        
-      
+        final FileChooser fileChooser = new FileChooser();    
     }
  
     
@@ -160,67 +152,76 @@ public class PdfTextchecker extends Application {
     }
     
     
-    Task longRunningTask = new Task<Void>() {
-
-        @Override
-        public Void call() throws Exception {
-        	updateMessage("start scanning....");
-        	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
-        	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
-        	
-        	int i;
-            for(i = 1; i <= 100; i++){
-                updateProgress(i, 100);
-                Thread.sleep(50);
-            }
-        	
-        	if (defaultfolder != null) {
-        		File[] files = new File(defaultfolder).listFiles();
-        		tagtool = new TaggedPdfParser(PdfTextchecker.this);
-        		updateMessage("start scanning.... files" + files.toString());
-        		showFiles(files);
-        		updateMessage(files.toString());	
-        		try {
-        			logger.debug(System.getProperties());
-        			logger.debug(System.getProperty("file.separator"));
-        			String filesep = System.getProperty("file.separator");
-        			if (scanORCCheckbox.isSelected()) {
-    	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
-    	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
-    	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
-    	    			NotaPDF.clear();
-    	    			aPDFNonOCR.clear();
-    	    			aPDFOCR.clear();
-        			}
-        			if (pasrseHtmlCheckbox.isSelected()) {
-    	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
-    	    			htmlreportsCSV.clear();
-        			}
-        			if (pdfMetaCheckBox.isSelected()) {
-    	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
-    	    			pdfMetaDataCSV.clear();
-        			}
-        		} catch (IOException e) {
-        			logger.debug(e);
-        		}
-
-        	}
-
-           
-            return null;
-        }
-    };
+   
     
     @FXML
     void PDFScanStart(ActionEvent event) {
+    	
+    	 this.enableUAtags(event); //turn off UA options while running
+    	
+    	 Task<Void> longRunningTask = new Task<Void>() {
+    	        @Override
+    	        public Void call() throws Exception {
+    	        	updateMessage("start scanning....");
+    	        	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
+    	        	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
+    	        	
+    	        	int i;
+    	            for(i = 1; i <= 100; i++){
+    	                updateProgress(i, 100);
+    	                Thread.sleep(50);
+    	            }
+    	        	
+    	        	if (defaultfolder != null) {
+    	        		File[] files = new File(defaultfolder).listFiles();
+    	        		tagtool = new TaggedPdfParser(PdfTextchecker.this);
+    	        		updateMessage("start scanning.... files" + files.toString());
+    	        		showFiles(files);
+    	        		updateMessage(files.toString());	
+    	        		try {
+    	        			logger.debug(System.getProperties());
+    	        			logger.debug(System.getProperty("file.separator"));
+    	        			String filesep = System.getProperty("file.separator");
+    	        			if (scanORCCheckbox.isSelected()) {
+    	    	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
+    	    	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
+    	    	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
+    	    	    			NotaPDF.clear();
+    	    	    			aPDFNonOCR.clear();
+    	    	    			aPDFOCR.clear();
+    	        			}
+    	        			if (pasrseHtmlCheckbox.isSelected()) {
+    	    	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
+    	    	    			htmlreportsCSV.clear();
+    	        			}
+    	        			if (pdfMetaCheckBox.isSelected()) {
+    	    	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
+    	    	    			pdfMetaDataCSV.clear();
+    	        			}
+    	        		} catch (IOException e) {
+    	        			logger.debug(e);
+    	        		}
+
+    	        	}
+
+    	           
+    	            return null;
+    	        }
+    	    };
+    	    
     	Thread th = new Thread(longRunningTask);
     	th.setDaemon(true);
-    	//pdftextTextArea.textProperty().bind(longRunningTask.messageProperty());
     	
     	longRunningTask.stateProperty().addListener(new ChangeListener<State>(){
     	    @Override
     	    public void changed(ObservableValue<? extends State> observable, State oldValue, State state) {
-    	        System.out.println(state);           	
+    	        if(state.toString().equals("SUCCEEDED")) {
+    	        	PdfTextchecker.this.enableUAtags(event); //turn on UA options when done
+    	        	PdfTextchecker.this.updateStatus("Done running task.....");
+    	        } else if (state.toString().equals("RUNNING")){
+    	        	PdfTextchecker.this.updateStatus("File names appear as processed..." + "\n");
+    	        } 
+    	        PdfTextchecker.this.updateStatus(state.toString() + "\n");
     	    }
     	});
     	longRunningTask.progressProperty().addListener(new ChangeListener<Number>(){
@@ -264,8 +265,7 @@ public class PdfTextchecker extends Application {
     			showFiles(file.listFiles()); // Calls same method again.
     		} else {
     			logger.debug("File: " + file.getName());
-    			txtstring += file.getName() + "\n";
-    			updateStatus(file.getName() + "\n");
+    			updateStatus(file.getAbsolutePath() + "\n");
     			if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
     				removeUAtaggs(file);
     			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
