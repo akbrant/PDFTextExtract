@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,12 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox removeUATaggsCheckbox;
 	@FXML private CheckBox pdfMetaCheckBox;
 	@FXML private CheckBox scanORCCheckbox;
-
+	
+	//Metadata change support
+	@FXML private CheckBox replaceMetadataCheckbox;
+	@FXML private TextField Author_input;
+	@FXML private TextField Subject_input;
+	
 	//UA tag support
 	@FXML private Pane Uatagspane;
 	@FXML private GridPane UaGridPane;
@@ -293,7 +299,7 @@ public class PdfTextchecker extends Application {
 	
     void removeUAtaggs(File file) {
     	try {
-    		Map<String, String> infoitext = null;
+    		HashMap<String, String> infoitext = null;
 			File dir = new File(file.getParent() + "/removedtags" );
 			dir.mkdirs();
 	    	logger.debug("Going to remove tags from: " + file.getName());
@@ -341,18 +347,26 @@ public class PdfTextchecker extends Application {
     	
     }
     
-    Map<String, String> checkNsettitle(PdfReader reader, File file){
+    HashMap<String, String> checkNsettitle(PdfReader reader, File file){
     	String regex = "\r\n|[\r\n]|[,;]";
     	String title = String.valueOf(reader.getInfo().get("Title")).replaceAll(regex, "");
-    	Map<String, String> l_infoitext = null;
+    	HashMap<String, String> l_infoitext = null;
+    	l_infoitext= reader.getInfo();
     	if (title.equals("null") || title == null || title.length()<1) {  //no title set 
-    		 l_infoitext= reader.getInfo();
     	     String fileNameWithOutExt = file.getName().replaceFirst("[.][^.]+$", "");
     	     l_infoitext.put("Title", fileNameWithOutExt);
-    	} else {
-    		 l_infoitext = reader.getInfo();
-    	}
-		return l_infoitext;
+    	}    	
+    	//if user wants meta data changes. Set author and append to subject
+    	if (replaceMetadataCheckbox.isSelected()) {
+    		String oldAuthor = String.valueOf(reader.getInfo().get("Author"));
+    		String oldSubject  = String.valueOf(reader.getInfo().get("Subject"));
+    		String newAuthor = Author_input.getText();
+    		String newSubject = Subject_input.getText(); 
+    		l_infoitext.put("Subject", oldSubject.concat(newSubject));
+    		l_infoitext.put("Author", newAuthor);
+    		l_infoitext.put("Keywords", String.valueOf(reader.getInfo().get("Keywords")));
+    	}    	
+    	return l_infoitext;
     }
     
 	void getPDFmetaData(File pdffile) {    	

@@ -1,6 +1,8 @@
 package panowow.pdfscaner;
 
 import java.text.SimpleDateFormat;
+
+import com.itextpdf.text.pdf.PdfDate;
 import com.itextpdf.text.pdf.PdfReader;
 
 
@@ -52,6 +54,7 @@ public class TagMetaData {
 		outs.append( "Creator,");
 		outs.append( "Producer," );
 		outs.append( "Creation Date,");
+		outs.append( "Creation Date2,");		
 		outs.append( "Modification Date," );
 		outs.append( "tag Tables," );
 		outs.append( "tag Tablerow," );
@@ -80,6 +83,8 @@ public class TagMetaData {
 		outs.append( "," + String.valueOf(preader.getInfo().get("Creator")).replaceAll(regex, ""));
 		outs.append( "," + String.valueOf(preader.getInfo().get("Producer")).replaceAll(regex, ""));
 		outs.append( "," + String.valueOf(preader.getInfo().get("CreationDate")).replaceAll(regex, ""));
+		String aw3date = PdfDate.getW3CDate(preader.getInfo().get("CreationDate"));
+		outs.append( "," + aw3date);		
 		outs.append( "," + String.valueOf(preader.getInfo().get("Modified")).replaceAll(regex, ""));
 		outs.append( "," + this.getNumtable());
 		outs.append( "," + this.getNumtablerow());
