@@ -366,9 +366,12 @@ public class PdfTextchecker extends Application {
     		String oldSubject  = String.valueOf(reader.getInfo().get("Subject"));
     		String newAuthor = Author_input.getText();
     		String newSubject = Subject_input.getText(); 
-    		l_infoitext.put("Subject", oldSubject.concat(newSubject));
-    		l_infoitext.put("Author", newAuthor);
-    		l_infoitext.put("Keywords", String.valueOf(reader.getInfo().get("Keywords")));
+    		//l_infoitext.put("Subject", oldSubject.concat(newSubject));
+    		//l_infoitext.put("Author", newAuthor);
+    		//l_infoitext.put("Keywords", String.valueOf(reader.getInfo().get("Keywords")));
+    		l_infoitext.put("Title", "Hello this is new title");
+    		l_infoitext.put("Subject", "a new suject");
+    		l_infoitext.put("Keywords", "one, tow, three, keywords");
     	}    	
     	return l_infoitext;
     }
