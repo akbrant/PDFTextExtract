@@ -69,8 +69,55 @@ public class TagMetaData {
 		outs.append( "tag Figures" );
 		return outs.toString();   
 	}
-	
 
+	public static String toStringHeaderslibCSV() {
+		StringBuffer outs = new StringBuffer();
+		outs.append( "Document Type,");
+		outs.append( "Title,");		
+		outs.append( "Subject," );
+		outs.append( "Subject-Geographic,");
+		outs.append( "Personal Author(s),");
+		outs.append( "Coporate Author(s),");
+		outs.append( "Published Date,");
+		outs.append( "Main Document URL or Filename,");
+		outs.append( "Supporting Documents URLs or Filenames," );
+		outs.append( "Volume,");
+		outs.append( "Issue,");		
+		outs.append( "Pages in Document," );
+		outs.append( "Series Name," );
+		outs.append( "Grants, Contracts, Cooperative Agreements," );
+		outs.append( "Journal Title," );
+		outs.append( "Key Words," );
+		outs.append( "DOI (if available)" );
+		return outs.toString();   
+	}
+
+	public String toStringDatalibCSV() {
+		StringBuffer outs = new StringBuffer();
+		String regex = "^null";
+		outs.append("NOAA Publication,");
+		outs.append(String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, "")+",");
+		outs.append(String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, "")+",");
+		outs.append("Alaska,");
+		outs.append(",");
+		outs.append("NOAA Fisheries Alaska Regional Office,");
+		SimpleDateFormat format1 = new SimpleDateFormat("MM-dd-yyyy");
+		Calendar cal = PdfDate.decode(preader.getInfo().get("CreationDate"));
+		outs.append(format1.format(cal.getTime())+","); //date only no time
+		outs.append(this.getFilename()+",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(preader.getNumberOfPages()+",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(",");
+		outs.append(String.valueOf(preader.getInfo().get("Keywords")).replaceAll(regex, "").replaceAll(",", ";"));
+		return outs.toString();   
+	}
+	
 	public String toStringDataCSV() {
 		StringBuffer outs = new StringBuffer();
 		String regex = "\r\n|[\r\n]|[,;]";

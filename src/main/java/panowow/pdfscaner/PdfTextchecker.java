@@ -74,6 +74,7 @@ public class PdfTextchecker extends Application {
 	ArrayList<String> aPDFPass = new ArrayList<String>();
 	ArrayList<String> htmlreportsCSV = new ArrayList<String>();
 	ArrayList<String> pdfMetaDataCSV = new ArrayList<String>();
+	ArrayList<String> pdfMetaDataLibCSV = new ArrayList<String>();
 	
 	@FXML private TextField Folderselected;
 	@FXML private TextArea pdftextTextArea;
@@ -202,6 +203,8 @@ public class PdfTextchecker extends Application {
     	        			}
     	        			if (pdfMetaCheckBox.isSelected()) {
     	    	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
+    	    	    			writeSmallTextFile(pdfMetaDataLibCSV, defaultfolder + filesep +"pdfMetaDataNOAALib.csv");
+    	    	    			pdfMetaDataLibCSV.clear();
     	    	    			pdfMetaDataCSV.clear();
     	        			}
     	        		} catch (IOException e) {
@@ -263,6 +266,7 @@ public class PdfTextchecker extends Application {
 				+ ",List items" + ",Lbl and LBody" + ",Appropriate nesting");
 		
 		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
+		pdfMetaDataLibCSV.add(TagMetaData.toStringHeaderslibCSV()); //add headers to lib csv
 		
     	for (File file : files) {
     		if (file.isDirectory()) {
@@ -384,9 +388,11 @@ public class PdfTextchecker extends Application {
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + pdffile.getName() + ".xml")), meatadata);
 			//add the println to cheep csv writer strings.
 			pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+			pdfMetaDataLibCSV.add(meatadata.toStringDatalibCSV());
     	} catch (IOException e) {
-    		if (meatadata != null ) {  //hate to do this, but we want to recored pdf meta data in csv even if pdf is not tagged. 
+    		if (meatadata != null ) {  // recored pdf meta data in csv even if pdf is not tagged. 
     	 		pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+    	 		pdfMetaDataLibCSV.add(meatadata.toStringDatalibCSV());
     		}
     		logger.error(e);
     		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
