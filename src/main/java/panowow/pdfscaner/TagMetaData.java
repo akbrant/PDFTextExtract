@@ -96,8 +96,8 @@ public class TagMetaData {
 		StringBuffer outs = new StringBuffer();
 		String regex = "^null";
 		outs.append("NOAA Publication,");
-		outs.append(String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, "")+",");
-		outs.append(String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, "")+",");
+		outs.append("\"" + String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, "")+ "\",");
+		outs.append("\"" + String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, "")+ "\",");
 		outs.append("Alaska,");
 		outs.append(",");
 		outs.append("NOAA Fisheries Alaska Regional Office,");
