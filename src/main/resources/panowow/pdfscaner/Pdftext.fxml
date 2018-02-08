@@ -76,15 +76,15 @@
                                     <CheckBox fx:id="ua7headers" mnemonicParsing="false" selected="true" text="7.x Headers" GridPane.rowIndex="3" />
                                     <CheckBox fx:id="uaH2H6" mnemonicParsing="false" selected="true" text="H2 to H6" GridPane.rowIndex="4" />
                                     <CheckBox fx:id="uashape" mnemonicParsing="false" selected="true" text="Shape" GridPane.columnIndex="2" />
-                                    <CheckBox fx:id="uatoc" mnemonicParsing="false" text="TOC" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <CheckBox fx:id="uatoci" mnemonicParsing="false" text="TOCI" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                    <CheckBox fx:id="ualink" mnemonicParsing="false" text="LINK" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <CheckBox fx:id="uatoc" mnemonicParsing="false" selected="true" text="TOC" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <CheckBox fx:id="uatoci" mnemonicParsing="false" selected="true" text="TOCI" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <CheckBox fx:id="ualink" mnemonicParsing="false" selected="true" text="LINK" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                     <CheckBox fx:id="ual" mnemonicParsing="false" selected="true" text="Lists (L)" GridPane.columnIndex="1" />
                                     <CheckBox fx:id="uali" mnemonicParsing="false" selected="true" text="Lists  (LI)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <CheckBox fx:id="uafigure" mnemonicParsing="false" selected="true" text="Figure" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <CheckBox fx:id="uachart" mnemonicParsing="false" selected="true" text="Chart" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <CheckBox fx:id="uainlineshape" mnemonicParsing="false" selected="true" text="InlineShape" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <CheckBox fx:id="uatagga" mnemonicParsing="false" text="Tagged Annotations" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <CheckBox fx:id="uatagga" mnemonicParsing="false" selected="true" text="Tagged Annotations" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                               <Separator prefWidth="200.0" />
