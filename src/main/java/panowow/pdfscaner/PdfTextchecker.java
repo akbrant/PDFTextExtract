@@ -364,15 +364,13 @@ public class PdfTextchecker extends Application {
     	if (replaceMetadataCheckbox.isSelected()) {
     		String oldAuthor = String.valueOf(reader.getInfo().get("Author"));
     		String oldSubject  = String.valueOf(reader.getInfo().get("Subject"));
+    		if(oldSubject.equals("null")) {
+    			oldSubject = "";
+    		}
     		String newAuthor = Author_input.getText();
     		String newSubject = Subject_input.getText(); 
     		l_infoitext.put("Subject", oldSubject.concat(newSubject));
-    		l_infoitext.put("Author", newAuthor);
-    		String addacomma = " ,";
-    		if (oldSubject.length()>0) {
-    			addacomma ="";
-    		}
-    		l_infoitext.put("Keywords", addacomma + String.valueOf(reader.getInfo().get("Keywords")));    		
+    		l_infoitext.put("Author", newAuthor);   		
     	}    	
     	return l_infoitext;
     }
