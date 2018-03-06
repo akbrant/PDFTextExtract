@@ -198,7 +198,7 @@ public class PdfTextchecker extends Application {
     	    	    			aPDFOCR.clear();
     	        			}
     	        			if (pasrseHtmlCheckbox.isSelected()) {
-    	    	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
+    	        				writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
     	    	    			htmlreportsCSV.clear();
     	        			}
     	        			if (pdfMetaCheckBox.isSelected()) {
@@ -268,6 +268,7 @@ public class PdfTextchecker extends Application {
 		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
 		pdfMetaDataLibCSV.add(TagMetaData.toStringHeaderslibCSV()); //add headers to lib csv
 		
+		File[] pdfsourcefiles = files; 
     	for (File file : files) {
     		if (file.isDirectory()) {
     			logger.debug("Directory: " + file.getName());
@@ -278,8 +279,14 @@ public class PdfTextchecker extends Application {
     			updateStatus(file.getAbsolutePath() + "\n");
     			if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
     				removeUAtaggs(file);
-    			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
-    				parseHtmlReport(file);
+    			} else if (pasrseHtmlCheckbox.isSelected() && htmlreportsCSV.size() == 1){
+    				String mydocs = System.getProperty("user.home").concat(System.getProperty("file.separator").concat("Documents"));
+    				logger.debug("Looking for Html reports at ".concat(mydocs));
+					File[] htmlsourcefiles = new File(mydocs).listFiles();
+					for (File htmlfile : htmlsourcefiles) {
+						if  (htmlfile.getName().toLowerCase().contains("pdf") && htmlfile.getName().toLowerCase().contains("html"))
+							parseHtmlReport(htmlfile);
+					}				
     			} else if (extractCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))){
     				parsePDFdoc(file);
     			} else if (pdfMetaCheckBox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
