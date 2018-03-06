@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -15,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="543.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
+<StackPane prefHeight="543.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="panowow.pdfscaner.PdfTextchecker">
 <children>
 <StackPane prefHeight="417.0" prefWidth="424.0">
 <children>
@@ -114,9 +119,9 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <CheckBox fx:id="replaceMetadataCheckbox" mnemonicParsing="false" selected="true" text="Replace MetaData" GridPane.rowIndex="1" />
-                                    <TextField fx:id="Author_input" promptText="New Author " GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <TextField fx:id="Subject_input" promptText="Append to Subject" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <CheckBox fx:id="replaceMetadataCheckbox" mnemonicParsing="false" text="Replace MetaData" GridPane.rowIndex="1" />
+                                    <TextField fx:id="Author_input" promptText="New Author " text="NOAA Fisheries Alaska Region" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField fx:id="Subject_input" promptText="Append to Subject" text="- If you cannot view or access any part of this document, please email: alaska.webmaster@noaa.gov or call 907-586-7221 so that we may assist you.&quot;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <Label text="Author" GridPane.rowIndex="2" />
                                     <Label text="Added Subject" GridPane.rowIndex="3" />
                                  </children>

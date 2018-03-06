@@ -272,9 +272,7 @@ public class PdfTextchecker extends Application {
     		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
     		pdfMetaDataLibCSV.add(TagMetaData.toStringHeaderslibCSV()); //add headers to lib csv
 
-    		String timeStamp = new SimpleDateFormat("yyyy_MMdd_HHmm_ss").format(new Date());
-    		htmlrpttarget = Paths.get(defaultfolder + System.getProperty("file.separator").concat("htmlReports").concat(timeStamp)); 
-    		Files.createDirectories(htmlrpttarget);
+    		
     		for (File file : files) {
     			if (file.isDirectory()) {
     				logger.debug("Directory: " + file.getName());
@@ -286,6 +284,9 @@ public class PdfTextchecker extends Application {
     				if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
     					removeUAtaggs(file);
     				} else if (pasrseHtmlCheckbox.isSelected() && htmlreportsCSV.size() == 1){
+    					String timeStamp = new SimpleDateFormat("yyyy_MMdd_HHmm_ss").format(new Date());
+    		    		htmlrpttarget = Paths.get(defaultfolder + System.getProperty("file.separator").concat("htmlReports").concat(timeStamp)); 
+    		    		Files.createDirectories(htmlrpttarget);
     					String mydocs = System.getProperty("user.home").concat(System.getProperty("file.separator").concat("Documents"));
     					logger.debug("Looking for Html reports at ".concat(mydocs));
     					File[] htmlsourcefiles = new File(mydocs).listFiles();
