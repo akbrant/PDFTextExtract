@@ -8,11 +8,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +43,13 @@ import com.itextpdf.text.pdf.PdfString;
 import com.itextpdf.text.xml.xmp.XmpWriter;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker.State;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -68,6 +77,7 @@ public class PdfTextchecker extends Application {
 	ArrayList<String> aPDFPass = new ArrayList<String>();
 	ArrayList<String> htmlreportsCSV = new ArrayList<String>();
 	ArrayList<String> pdfMetaDataCSV = new ArrayList<String>();
+	ArrayList<String> pdfMetaDataLibCSV = new ArrayList<String>();
 	
 	@FXML private TextField Folderselected;
 	@FXML private TextArea pdftextTextArea;
@@ -76,7 +86,12 @@ public class PdfTextchecker extends Application {
 	@FXML private CheckBox removeUATaggsCheckbox;
 	@FXML private CheckBox pdfMetaCheckBox;
 	@FXML private CheckBox scanORCCheckbox;
-
+	
+	//Metadata change support
+	@FXML private CheckBox replaceMetadataCheckbox;
+	@FXML private TextField Author_input;
+	@FXML private TextField Subject_input;
+	
 	//UA tag support
 	@FXML private Pane Uatagspane;
 	@FXML private GridPane UaGridPane;
@@ -103,16 +118,14 @@ public class PdfTextchecker extends Application {
 	
 	private PdfDictionary structTreeRoot;
 	private TaggedPdfParser tagtool;
-	
-	
-	
-	
+	private Path htmlrpttarget;
+		
     @Override
     public void start(final Stage stage) throws IOException {
     
     	Parent root = FXMLLoader.load(getClass().getResource("Pdftext.fxml"));
 		Scene scene = new Scene(root);
-
+		
 		stage.setTitle("Pick PDF directory");
 		stage.setScene(scene);
 		stage.setResizable(false);
@@ -121,10 +134,7 @@ public class PdfTextchecker extends Application {
 
 		this.primaryStage = stage;
  
-        final FileChooser fileChooser = new FileChooser();
- 
-        
-      
+        final FileChooser fileChooser = new FileChooser();    
     }
  
     
@@ -152,94 +162,169 @@ public class PdfTextchecker extends Application {
     	
     }
     
+    
+   
+    
     @FXML
     void PDFScanStart(ActionEvent event) {
-
-    	logger.debug("start scanning....");
-    	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
-    	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
     	
-    	if (defaultfolder != null) {
-    		File[] files = new File(defaultfolder).listFiles();
-    		tagtool = new TaggedPdfParser(this);
-    		showFiles(files);
+    	 this.enableUAtags(event); //turn off UA options while running
+    	
+    	 Task<Void> longRunningTask = new Task<Void>() {
+    	        @Override
+    	        public Void call() throws Exception {
+    	        	updateMessage("start scanning....");
+    	        	Logger logpdfengine = Logger.getLogger("org.apache.pdfbox.util.PDFStreamEngine");
+    	        	logpdfengine.setLevel(org.apache.log4j.Level.OFF);
+    	        	
+    	        	int i;
+    	            for(i = 1; i <= 100; i++){
+    	                updateProgress(i, 100);
+    	                Thread.sleep(50);
+    	            }
+    	        	
+    	        	if (defaultfolder != null) {
+    	        		File[] files = new File(defaultfolder).listFiles();
+    	        		tagtool = new TaggedPdfParser(PdfTextchecker.this);
+    	        		updateMessage("start scanning.... files" + files.toString());
+    	        		showFiles(files);
+    	        		updateMessage(files.toString());	
+    	        		try {
+    	        			logger.debug(System.getProperties());
+    	        			logger.debug(System.getProperty("file.separator"));
+    	        			String filesep = System.getProperty("file.separator");
+    	        			if (scanORCCheckbox.isSelected()) {
+    	    	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
+    	    	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
+    	    	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
+    	    	    			NotaPDF.clear();
+    	    	    			aPDFNonOCR.clear();
+    	    	    			aPDFOCR.clear();
+    	        			}
+    	        			if (pasrseHtmlCheckbox.isSelected()) {
+    	        				writeSmallTextFile(htmlreportsCSV, htmlrpttarget + filesep +"pdfaccessibility.csv");
+    	    	    			htmlreportsCSV.clear();
+    	        			}
+    	        			if (pdfMetaCheckBox.isSelected()) {
+    	    	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
+    	    	    			writeSmallTextFile(pdfMetaDataLibCSV, defaultfolder + filesep +"pdfMetaDataNOAALib.csv");
+    	    	    			pdfMetaDataLibCSV.clear();
+    	    	    			pdfMetaDataCSV.clear();
+    	        			}
+    	        		} catch (IOException e) {
+    	        			logger.debug(e);
+    	        		}
 
-    		try {
-    			logger.debug(System.getProperties());
-    			logger.debug(System.getProperty("file.separator"));
-    			String filesep = System.getProperty("file.separator");
-    			if (scanORCCheckbox.isSelected()) {
-	    			writeSmallTextFile(NotaPDF, defaultfolder + filesep +"Notapdf.txt");
-	    			writeSmallTextFile(aPDFNonOCR, defaultfolder + filesep + "pdfNotOcred.txt");
-	    			writeSmallTextFile(aPDFOCR, defaultfolder + filesep +"pdfocred.txt");
-	    			NotaPDF.clear();
-	    			aPDFNonOCR.clear();
-	    			aPDFOCR.clear();
-    			}
-    			if (pasrseHtmlCheckbox.isSelected()) {
-	    			writeSmallTextFile(htmlreportsCSV, defaultfolder + filesep +"pdfaccessibility.csv");
-	    			htmlreportsCSV.clear();
-    			}
-    			if (pdfMetaCheckBox.isSelected()) {
-	    			writeSmallTextFile(pdfMetaDataCSV, defaultfolder + filesep +"pdfMetaData.csv");
-	    			pdfMetaDataCSV.clear();
-    			}
-    		} catch (IOException e) {
-    			logger.debug(e);
-    		}
+    	        	}
 
-    	}
-
+    	           
+    	            return null;
+    	        }
+    	    };
+    	    
+    	Thread th = new Thread(longRunningTask);
+    	th.setDaemon(true);
+    	
+    	longRunningTask.stateProperty().addListener(new ChangeListener<State>(){
+    	    @Override
+    	    public void changed(ObservableValue<? extends State> observable, State oldValue, State state) {
+    	        if(state.toString().equals("SUCCEEDED")) {
+    	        	PdfTextchecker.this.enableUAtags(event); //turn on UA options when done
+    	        	PdfTextchecker.this.updateStatus("Done running task.....");
+    	        } else if (state.toString().equals("RUNNING")){
+    	        	PdfTextchecker.this.updateStatus("File names appear as processed..." + "\n");
+    	        } 
+    	        PdfTextchecker.this.updateStatus(state.toString() + "\n");
+    	    }
+    	});
+    	longRunningTask.progressProperty().addListener(new ChangeListener<Number>(){
+    		@Override
+    	    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number val) {
+    	        Platform.runLater(new Runnable(){
+    	            @Override
+    	            public void run() {
+    	            	//pdftextTextArea.appendText("Value : " + val.intValue() + "\n");	
+    	            }
+    	        });
+    	    }
+    	});
+    	th.start();	
     }
+    
+    
+    
     
     public void showFiles(File[] files)
     {
+    	try {
+    		StringBuffer strbuff = new StringBuffer();
+    		htmlreportsCSV.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed"
+    				+ ",Accessibility permission flag" + ",Image-only PDF" + ",Tagged PDF" + ",Primary language" + ",Title"
+    				+ ",Bookmarks"
+    				+ ",Tagged content" + ",annotations" + ",Tab order" + ",Character encoding" + ",Tagged multimedia"
+    				+ ",Screen flicker" + ",Scripts" + ",Timed responses"
+    				+ ",Tagged form fields" + ",Field descriptions"
+    				+ ",Figures alternate text" + ",Nested alternate text" + ",Associated with content"
+    				+ ",Hides annotation" + ",Other elements alternate text"
+    				+ ",Rows" + ",TH and TD" + ",Headers" + ",Regularity" + ",Summary"
+    				+ ",List items" + ",Lbl and LBody" + ",Appropriate nesting");
 
-    	StringBuffer strbuff = new StringBuffer();
-		htmlreportsCSV.add("Filepath" + "," + "FileName" + "," + "SummPassed" + "," + "Summfailed"
-				+ ",Accessibility permission flag" + ",Image-only PDF" + ",Tagged PDF" + ",Primary language" + ",Title"
-				+ ",Bookmarks"
-				+ ",Tagged content" + ",annotations" + ",Tab order" + ",Character encoding" + ",Tagged multimedia"
-				+ ",Screen flicker" + ",Scripts" + ",Timed responses"
-				+ ",Tagged form fields" + ",Field descriptions"
-				+ ",Figures alternate text" + ",Nested alternate text" + ",Associated with content"
-				+ ",Hides annotation" + ",Other elements alternate text"
-				+ ",Rows" + ",TH and TD" + ",Headers" + ",Regularity" + ",Summary"
-				+ ",List items" + ",Lbl and LBody" + ",Appropriate nesting");
-		
-		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
-		
-    	for (File file : files) {
-    		if (file.isDirectory()) {
-    			logger.debug("Directory: " + file.getName());
-    			strbuff.append("Directory: " + file.getName() + "\n");
-    			pdftextTextArea.setText(strbuff.toString());
-    			showFiles(file.listFiles()); // Calls same method again.
-    		} else {
-    			logger.debug("File: " + file.getName());
+    		pdfMetaDataCSV.add(TagMetaData.toStringHeadersCSV());  //add headers for metaCSV
+    		pdfMetaDataLibCSV.add(TagMetaData.toStringHeaderslibCSV()); //add headers to lib csv
 
-    			if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
-    				removeUAtaggs(file);
-    			} else if (pasrseHtmlCheckbox.isSelected() && (file.getName().toLowerCase().contains("html"))){
-    				parseHtmlReport(file);
-    			} else if (extractCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))){
-    				parsePDFdoc(file);
-    			} else if (pdfMetaCheckBox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
-	    			this.getPDFmetaData(file);
+    		
+    		for (File file : files) {
+    			if (file.isDirectory()) {
+    				logger.debug("Directory: " + file.getName());
+    				strbuff.append("Directory: " + file.getName() + "\n");
+    				showFiles(file.listFiles()); // Calls same method again.
+    			} else {
+    				logger.debug("File: " + file.getName());
+    				updateStatus(file.getAbsolutePath() + "\n");
+    				if (removeUATaggsCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
+    					removeUAtaggs(file);
+    				} else if (pasrseHtmlCheckbox.isSelected() && htmlreportsCSV.size() == 1){
+    					String timeStamp = new SimpleDateFormat("yyyy_MMdd_HHmm_ss").format(new Date());
+    		    		htmlrpttarget = Paths.get(defaultfolder + System.getProperty("file.separator").concat("htmlReports").concat(timeStamp)); 
+    		    		Files.createDirectories(htmlrpttarget);
+    					String mydocs = System.getProperty("user.home").concat(System.getProperty("file.separator").concat("Documents"));
+    					logger.debug("Looking for Html reports at ".concat(mydocs));
+    					File[] htmlsourcefiles = new File(mydocs).listFiles();
+    					for (File htmlfile : htmlsourcefiles) {
+    						if  (htmlfile.getName().toLowerCase().contains("pdf") && htmlfile.getName().toLowerCase().contains("html")) {
+    							parseHtmlReport(htmlfile);
+    							Files.move(Paths.get(htmlfile.toURI()), htmlrpttarget.resolve(htmlfile.getName()));			
+    						}
+    					}				
+    				} else if (extractCheckbox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))){
+    					parsePDFdoc(file);
+    				} else if (pdfMetaCheckBox.isSelected()  && (file.getName().toLowerCase().contains("pdf"))) {
+    					this.getPDFmetaData(file);
+    				}
+
+    				strbuff.append(file.getName() + "\n");
     			}
-				
-    			strbuff.append(file.getName() + "\n");
-    			pdftextTextArea.setText(strbuff.toString());
-    		}
-    	} 
+    		} 
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
     }
 
+
+	private void updateStatus(String message) {
+	    if (Platform.isFxApplicationThread()) {
+	    	pdftextTextArea.appendText(message);
+	    } else {
+	     
+	        Platform.runLater(() -> pdftextTextArea.appendText(message));
+	    }
+	}
+	
     void removeUAtaggs(File file) {
     	try {
-    		Map<String, String> infoitext = null;
+    		HashMap<String, String> infoitext = null;
 			File dir = new File(file.getParent() + "/removedtags" );
 			dir.mkdirs();
-			
 	    	logger.debug("Going to remove tags from: " + file.getName());
 			PdfReader reader = new PdfReader(file.getAbsolutePath());
 			if (uatagga.isSelected()) { 
@@ -285,18 +370,28 @@ public class PdfTextchecker extends Application {
     	
     }
     
-    Map<String, String> checkNsettitle(PdfReader reader, File file){
+    HashMap<String, String> checkNsettitle(PdfReader reader, File file){
     	String regex = "\r\n|[\r\n]|[,;]";
     	String title = String.valueOf(reader.getInfo().get("Title")).replaceAll(regex, "");
-    	Map<String, String> l_infoitext = null;
+    	HashMap<String, String> l_infoitext = null;
+    	l_infoitext= reader.getInfo();
     	if (title.equals("null") || title == null || title.length()<1) {  //no title set 
-    		 l_infoitext= reader.getInfo();
     	     String fileNameWithOutExt = file.getName().replaceFirst("[.][^.]+$", "");
     	     l_infoitext.put("Title", fileNameWithOutExt);
-    	} else {
-    		 l_infoitext = reader.getInfo();
-    	}
-		return l_infoitext;
+    	}    	
+    	//if user wants meta data changes. Set author and append to subject
+    	if (replaceMetadataCheckbox.isSelected()) {
+    		String oldAuthor = String.valueOf(reader.getInfo().get("Author"));
+    		String oldSubject  = String.valueOf(reader.getInfo().get("Subject"));
+    		if(oldSubject.equals("null")) {
+    			oldSubject = "";
+    		}
+    		String newAuthor = Author_input.getText();
+    		String newSubject = Subject_input.getText(); 
+    		l_infoitext.put("Subject", oldSubject.concat(newSubject));
+    		l_infoitext.put("Author", newAuthor);   		
+    	}    	
+    	return l_infoitext;
     }
     
 	void getPDFmetaData(File pdffile) {    	
@@ -314,9 +409,11 @@ public class PdfTextchecker extends Application {
 			tagtool.convertToXml(reader,  new FileOutputStream(new File(dir.getAbsolutePath() +"/" + pdffile.getName() + ".xml")), meatadata);
 			//add the println to cheep csv writer strings.
 			pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+			pdfMetaDataLibCSV.add(meatadata.toStringDatalibCSV());
     	} catch (IOException e) {
-    		if (meatadata != null ) {  //hate to do this, but we want to recored pdf meta data in csv even if pdf is not tagged. 
+    		if (meatadata != null ) {  // recored pdf meta data in csv even if pdf is not tagged. 
     	 		pdfMetaDataCSV.add(meatadata.toStringDataCSV());
+    	 		pdfMetaDataLibCSV.add(meatadata.toStringDatalibCSV());
     		}
     		logger.error(e);
     		logger.debug("cant read file or metadata: " + pdffile.getAbsolutePath());   		
