@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://ns.adobe.com/acrobat/workflow/2012" title="Folder Run Full Report" description="Run a full report on all docs in folder. " majorVersion="1" minorVersion="0">
+	<Sources defaultCommand="WorkflowPlaybackSelectFolder"/>
+	<Group label="1. Prepare">
+		<Separator/>
+	</Group>
+	<Group label="2. Set Language &amp; Tags"/>
+	<Group label="3. Run Accessibility Check">
+		<Command name="AccCheck:DoCheck" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="AnnotAltText" type="boolean" value="true"/>
+				<Item name="Annots" type="boolean" value="true"/>
+				<Item name="AttachLog" type="boolean" value="false"/>
+				<Item name="Bookmark" type="boolean" value="true"/>
+				<Item name="CategoryName" type="boolean" value="false"/>
+				<Item name="CharEnc" type="boolean" value="true"/>
+				<Item name="ChosenPath" type="null"/>
+				<Item name="Color" type="boolean" value="true"/>
+				<Item name="ContentAltText" type="boolean" value="true"/>
+				<Item name="CreateLog" type="boolean" value="true"/>
+				<Item name="DocTitle" type="boolean" value="true"/>
+				<Item name="ElementAltText" type="boolean" value="true"/>
+				<Item name="FieldNames" type="boolean" value="true"/>
+				<Item name="FigureAltText" type="boolean" value="true"/>
+				<Item name="FlickerRate" type="boolean" value="true"/>
+				<Item name="Forms" type="boolean" value="true"/>
+				<Item name="FromPage" type="null"/>
+				<Item name="Headings" type="boolean" value="true"/>
+				<Item name="ImageOnly" type="boolean" value="true"/>
+				<Item name="IsBatch" type="boolean" value="false"/>
+				<Item name="LangSpec" type="boolean" value="true"/>
+				<Item name="LblLBody" type="boolean" value="true"/>
+				<Item name="ListItems" type="boolean" value="true"/>
+				<Item name="LogicalReadingOrder" type="boolean" value="true"/>
+				<Item name="Multimedia" type="boolean" value="true"/>
+				<Item name="NavigationLinks" type="boolean" value="true"/>
+				<Item name="NestedAltText" type="boolean" value="true"/>
+				<Item name="Pages" type="integer" value="0"/>
+				<Item name="PermCheck" type="boolean" value="true"/>
+				<Item name="Scripts" type="boolean" value="true"/>
+				<Item name="ShowExistingAttachedLogAlert" type="boolean" value="true"/>
+				<Item name="ShowOptionsDialog" type="boolean" value="true"/>
+				<Item name="TabOrder" type="boolean" value="true"/>
+				<Item name="TableHeaders" type="boolean" value="true"/>
+				<Item name="TableRegularity" type="boolean" value="true"/>
+				<Item name="TableRows" type="boolean" value="true"/>
+				<Item name="TableSummary" type="boolean" value="false"/>
+				<Item name="TableTHTD" type="boolean" value="true"/>
+				<Item name="Tagged" type="boolean" value="true"/>
+				<Item name="TaggedContents" type="boolean" value="true"/>
+				<Item name="TimedResponses" type="boolean" value="true"/>
+				<Item name="ToPage" type="null"/>
+			</Items>
+		</Command>
+	</Group>
+</Workflow>

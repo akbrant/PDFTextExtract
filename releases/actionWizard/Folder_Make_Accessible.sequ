@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://ns.adobe.com/acrobat/workflow/2012" title="Folder Make Accessible accessibility scan" description="Make your PDF accessible using Acrobat accessibility tools. These steps will ensure that scanned text, content structure and document information are available for assistive technology." majorVersion="1" minorVersion="0">
+	<Sources defaultCommand="WorkflowPlaybackSelectFolder"/>
+	<Group label="1. Prepare">
+		<Instruction label="Set a title and ensure it displays in the window title bar." pauseBefore="false"/>
+		<Command name="Cpt:CapturePages" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="Downsample" type="integer" value="600"/>
+				<Item name="Format" type="integer" value="0"/>
+				<Item name="Language" type="integer" value="26"/>
+			</Items>
+		</Command>
+		<Command name="GeneralInfo" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="Author" type="null"/>
+				<Item name="Keywords" type="null"/>
+				<Items name="LeaveAsIs">
+					<Item name="Author" type="boolean" value="true"/>
+					<Item name="Keywords" type="boolean" value="true"/>
+					<Item name="Subject" type="boolean" value="true"/>
+					<Item name="Title" type="boolean" value="true"/>
+				</Items>
+				<Item name="Subject" type="null"/>
+				<Item name="Title" type="null"/>
+			</Items>
+		</Command>
+		<Command name="OpenInfo" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="CenterWindow" type="boolean" value="false"/>
+				<Item name="DisplayDocTitle" type="boolean" value="true"/>
+				<Item name="FitWindow" type="boolean" value="false"/>
+				<Item name="FullScreen" type="boolean" value="false"/>
+				<Item name="HideMenubar" type="boolean" value="false"/>
+				<Item name="HideToolbar" type="boolean" value="false"/>
+				<Item name="HideWindowUI" type="boolean" value="false"/>
+				<Items name="LeaveAsIs">
+					<Item name="CenterWindow" type="boolean" value="true"/>
+					<Item name="FitWindow" type="boolean" value="true"/>
+					<Item name="FullScreen" type="boolean" value="true"/>
+					<Item name="HideMenubar" type="boolean" value="true"/>
+					<Item name="HideToolbar" type="boolean" value="true"/>
+					<Item name="HideWindowUI" type="boolean" value="true"/>
+					<Item name="Magnification" type="boolean" value="true"/>
+					<Item name="OpenAction" type="boolean" value="true"/>
+					<Item name="PageLayout" type="boolean" value="true"/>
+					<Item name="PageMode" type="boolean" value="true"/>
+					<Item name="PageNum" type="boolean" value="true"/>
+				</Items>
+				<Item name="Magnification" type="text" value="100%"/>
+				<Item name="PageLayout" type="integer" value="0"/>
+				<Item name="PageMode" type="integer" value="1"/>
+				<Item name="PageNum" type="text" value="1"/>
+				<Item name="ResetDest" type="boolean" value="false"/>
+			</Items>
+		</Command>
+		<Separator/>
+		<Command name="SetTabOrder" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="DefaultTabOrder" type="atom" value="S"/>
+			</Items>
+		</Command>
+	</Group>
+	<Group label="2. Set Language &amp; Tags">
+		<Command name="SetReadingLanguage" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="Language" type="text" value="en"/>
+			</Items>
+		</Command>
+		<Command name="Adobe:MakeAccessible" pauseBefore="false" promptUser="true"/>
+	</Group>
+	<Group label="3. Run Accessibility Check">
+		<Command name="AccCheck:DoCheck" pauseBefore="false" promptUser="true">
+			<Items>
+				<Item name="AnnotAltText" type="boolean" value="true"/>
+				<Item name="Annots" type="boolean" value="true"/>
+				<Item name="AttachLog" type="boolean" value="false"/>
+				<Item name="Bookmark" type="boolean" value="true"/>
+				<Item name="CategoryName" type="integer" value="2"/>
+				<Item name="CharEnc" type="boolean" value="true"/>
+				<Item name="ChosenPath" type="null"/>
+				<Item name="Color" type="boolean" value="true"/>
+				<Item name="ContentAltText" type="boolean" value="true"/>
+				<Item name="CreateLog" type="boolean" value="true"/>
+				<Item name="DocTitle" type="boolean" value="true"/>
+				<Item name="ElementAltText" type="boolean" value="true"/>
+				<Item name="FieldNames" type="boolean" value="true"/>
+				<Item name="FigureAltText" type="boolean" value="true"/>
+				<Item name="FlickerRate" type="boolean" value="true"/>
+				<Item name="Forms" type="boolean" value="true"/>
+				<Item name="FromPage" type="text" value="1"/>
+				<Item name="Headings" type="boolean" value="true"/>
+				<Item name="ImageOnly" type="boolean" value="true"/>
+				<Item name="IsBatch" type="boolean" value="false"/>
+				<Item name="LangSpec" type="boolean" value="true"/>
+				<Item name="LblLBody" type="boolean" value="true"/>
+				<Item name="ListItems" type="boolean" value="true"/>
+				<Item name="LogicalReadingOrder" type="boolean" value="true"/>
+				<Item name="Multimedia" type="boolean" value="true"/>
+				<Item name="NavigationLinks" type="boolean" value="true"/>
+				<Item name="NestedAltText" type="boolean" value="true"/>
+				<Item name="Pages" type="integer" value="0"/>
+				<Item name="PermCheck" type="boolean" value="true"/>
+				<Item name="Scripts" type="boolean" value="true"/>
+				<Item name="ShowExistingAttachedLogAlert" type="boolean" value="true"/>
+				<Item name="ShowOptionsDialog" type="boolean" value="false"/>
+				<Item name="TabOrder" type="boolean" value="true"/>
+				<Item name="TableHeaders" type="boolean" value="true"/>
+				<Item name="TableRegularity" type="boolean" value="true"/>
+				<Item name="TableRows" type="boolean" value="true"/>
+				<Item name="TableSummary" type="boolean" value="true"/>
+				<Item name="TableTHTD" type="boolean" value="true"/>
+				<Item name="Tagged" type="boolean" value="true"/>
+				<Item name="TaggedContents" type="boolean" value="true"/>
+				<Item name="TimedResponses" type="boolean" value="true"/>
+				<Item name="ToPage" type="text" value="1"/>
+			</Items>
+		</Command>
+		<Command name="WorkflowPlaybackSaveFiles" pauseBefore="false" promptUser="false">
+			<Items>
+				<Item name="AddToBaseName" type="boolean" value="false"/>
+				<Item name="DocSaveDestType" type="string" value="WorkflowPlaybackSave"/>
+				<Item name="DontOverwrite" type="boolean" value="true"/>
+				<Item name="EmbedIndex" type="boolean" value="false"/>
+				<Item name="FileVariation" type="integer" value="0"/>
+				<Item name="HandleOutput" type="boolean" value="true"/>
+				<Item name="InsertAfterBaseName" type="text" value=""/>
+				<Item name="InsertBeforeBaseName" type="text" value=""/>
+				<Item name="NumbericNaming" type="boolean" value="false"/>
+				<Item name="OptimizePDF" type="boolean" value="true"/>
+				<Item name="PresetName" type="text" value="Standard"/>
+				<Item name="RunPDFOptimizer" type="boolean" value="false"/>
+			</Items>
+		</Command>
+	</Group>
+</Workflow>
