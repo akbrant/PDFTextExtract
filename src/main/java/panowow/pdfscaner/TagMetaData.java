@@ -94,27 +94,27 @@ public class TagMetaData {
 
 	public String toStringDatalibCSV() {
 		StringBuffer outs = new StringBuffer();
-		String regex = "^null";
-		outs.append("NOAA Publication,");
-		outs.append("\"" + String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, "")+ "\",");
-		outs.append("\"" + String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, "")+ "\",");
-		outs.append("Alaska,");
+		String regex = "\r\n|[\r\n]|[,;]";
+		outs.append("NOAA Publication");
+		outs.append("," +String.valueOf(preader.getInfo().get("Title")).replaceAll(regex, ""));
+		outs.append("," + String.valueOf(preader.getInfo().get("Subject")).replaceAll(regex, ""));
+		outs.append(",Alaska");
 		outs.append(",");
-		outs.append("NOAA Fisheries Alaska Regional Office,");
+		outs.append(",NOAA Fisheries Alaska Regional Office");
 		SimpleDateFormat format1 = new SimpleDateFormat("MM-dd-yyyy");
 		Calendar cal = PdfDate.decode(preader.getInfo().get("CreationDate"));
-		outs.append(format1.format(cal.getTime())+","); //date only no time
-		outs.append(this.getFilename()+",");
+		outs.append("," + format1.format(cal.getTime())); //date only no time
+		outs.append("," + this.getFilename());
 		outs.append(",");
 		outs.append(",");
 		outs.append(",");
-		outs.append(preader.getNumberOfPages()+",");
+		outs.append("," + preader.getNumberOfPages());
 		outs.append(",");
 		outs.append(",");
 		outs.append(",");
 		outs.append(",");
 		outs.append(",");
-		outs.append(String.valueOf(preader.getInfo().get("Keywords")).replaceAll(regex, "").replaceAll(",", ";"));
+		outs.append("," + String.valueOf(preader.getInfo().get("Keywords")).replaceAll(regex, ""));
 		return outs.toString();   
 	}
 	
