@@ -2,13 +2,11 @@
 package panowow.pdfscaner;
 
 import java.awt.Desktop;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,8 +16,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -40,12 +36,9 @@ import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfString;
-import com.itextpdf.text.xml.xmp.XmpWriter;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
 import javafx.beans.value.ChangeListener;
@@ -54,7 +47,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -342,10 +334,12 @@ public class PdfTextchecker extends Application {
 		
 			stamper = new PdfStamper(reader, new FileOutputStream(dir.getAbsolutePath() +"/" + file.getName()));	
 			logger.debug("Checking for title..and setting if blank");
-			infoitext = this.checkNsettitle(reader, file); 
-			stamper.setMoreInfo(infoitext);
-			stamper.close();	
-						
+			if (replaceMetadataCheckbox.isSelected()) {				
+				infoitext = this.checkNsettitle(reader, file); 
+				stamper.setMoreInfo(infoitext);				
+			}
+			
+			stamper.close();			
 			reader.close();
 		} catch (IOException e) {
     		logger.error(e);
